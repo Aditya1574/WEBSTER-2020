@@ -1,0 +1,94 @@
+<%- include('partials/header') %>
+
+<div class="row">
+  <div class="col-xs-12 col-6">
+<center>
+<div class="container mt-5">
+  <h1 class="my-5">Register As Student</h1>
+
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card">
+        <div class="card-body">
+
+          <!-- Makes POST request to /register route -->
+          <form action="/register" method="POST">
+            <div class="form-group">
+              <label for="email"><b>Email</b></label>
+              <input type="email" class="form-control" name="username">
+            </div>
+            <div class="form-group">
+              <label for="password"><b>Password</b></label>
+              <input type="password" class="form-control" name="password">
+            </div>
+            <button type="submit" class="btn btn-dark">Register</button>
+            <input type="hidden" name="STD">
+          </form>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-12" style="margin-top: 20px;">
+      <div class="card social-block" style="width: 50%;">
+        <div class="card-body">
+          <a class="btn btn-block" href="/auth/google" role="button">
+            <i class="fab fa-google"></i>
+            Sign Up with Google
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div> <!-- inner column-->
+</center>
+
+<div class="col-xs-12 col-6">
+  <center>
+  <div class="container mt-5">
+    <h1 class="my-5">Register As Recruiter</h1>
+  
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="card">
+          <div class="card-body">
+  
+            <!-- Makes POST request to /register route -->
+            <form action="/register" method="POST">
+              <div class="form-group">
+                <label for="email"><b>Email</b></label>
+                <input type="email" class="form-control" name="username">
+              </div>
+              <div class="form-group">
+                <label for="password"><b>Password</b></label>
+                <input type="password" class="form-control" name="password">
+              </div>
+              <button type="submit" class="btn btn-dark">Register</button>
+              <input type="hidden" name="RCT">
+            </form>
+  
+          </div>
+        </div>
+      </div>
+  
+      <div class="col-sm-12" style="margin-top: 20px;">
+        <div class="card social-block" style="width: 50%;">
+          <div class="card-body">
+            <a class="btn btn-block" href="/auth/google" role="button">
+              <i class="fab fa-google"></i>
+              Sign Up with Google
+            </a>
+          </div>
+        </div>
+      </div>
+  
+    </div>
+  </div>
+  </div> <!-- inner column-->
+</center>
+
+</div> <!-- outer row -->
+
+<%- include('partials/header') %>

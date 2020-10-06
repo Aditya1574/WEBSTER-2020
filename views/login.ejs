@@ -1,0 +1,100 @@
+<%- include('partials/header') %>
+
+<div class="row">
+<div class="col-xs-12 col-6">
+  <center>
+<div class="container mt-5">
+  <center>
+  <h1 class="my-5">Student Login</h1>
+   </center>
+  <div class="row">
+    <div class="col-sm-12">
+      
+      <div class="card">
+        <div class="card-body">
+
+          <!-- Makes POST request to /login route -->
+          <form action="/login" method="POST">
+            <div class="form-group">
+              <label for="email"><b>Email</b></label>
+              <input type="email" class="form-control" name="username">
+            </div>
+            <div class="form-group">
+              <label for="password"><b>Password</b></label>
+              <input type="password" class="form-control" name="password">
+            </div>
+            <button type="submit" class="btn btn-dark">Login</button>
+            <input type="hidden" name="INDENTITY" value="STDLOGIN">
+          </form>
+
+        </div>
+      </div>
+  
+    </div>
+
+    <div class="col-sm-12" style="margin-top: 20px">
+      <div class="card" style="width: 50%;">
+        <div class="card-body">
+          <a class="btn btn-block" href="/auth/google" role="button">
+            <i class="fab fa-google"></i>
+            Sign In with Google
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</center>
+</div>   <!-- inner column -->
+<div class="col-xs-12 col-6">
+  <center>
+  <div class="container mt-5">
+
+    <center>
+      <h1 class="my-5">Recruiter Login</h1>
+    </center>
+  
+    <div class="row">
+      <div class="col-sm-12">
+        
+        <div class="card">
+          <div class="card-body">
+  
+            <!-- Makes POST request to /login route -->
+            <form action="/login" method="POST">
+              <div class="form-group">
+                <label for="email"><b>Email</b></label>
+                <input type="email" class="form-control" name="username">
+              </div>
+              <div class="form-group">
+                <label for="password"><b>Password</b></label>
+                <input type="password" class="form-control" name="password">
+              </div>
+              <button type="submit" class="btn btn-dark">Login</button>
+              <input type="hidden"  name="INDENTITY" value="RGTLOGIN">
+            </form>
+  
+          </div>
+        </div>
+    
+      </div>
+     
+      <div class="col-sm-12" style="margin-top: 20px">
+        <div class="card" style="width: 50%;">
+          <div class="card-body">
+            <a class="btn btn-block" href="/auth/google" role="button">
+              <i class="fab fa-google"></i>
+              Sign In with Google
+            </a>
+          </div>
+        </div>
+      </div>
+ 
+    </div>
+  </div>
+</center>
+  </div>   <!-- inner column -->
+</div> <!--  outer Row -->
+
+<%- include('partials/footer') %>
