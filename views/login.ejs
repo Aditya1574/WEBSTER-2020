@@ -1,12 +1,14 @@
 <%- include('partials/header') %>
 
-<div class="row">
-<div class="col-xs-12 col-6">
-  <center>
+<div class="tab">
+  <button class="tablinks" onclick="openCity(event, 'London')" id="defaultOpen"><b>Student Login</b></button>
+  <button class="tablinks" onclick="openCity(event, 'Paris')"><b>Recruiter Login</b></button>
+</div>
+
+<div id="London" class="tabcontent">
+<!-- Student Login -->
 <div class="container mt-5">
-  <center>
   <h1 class="my-5">Student Login</h1>
-   </center>
   <div class="row">
     <div class="col-sm-12">
       
@@ -45,16 +47,13 @@
 
   </div>
 </div>
-</center>
-</div>   <!-- inner column -->
-<div class="col-xs-12 col-6">
-  <center>
-  <div class="container mt-5">
+<!-- Student End -->
+</div>
 
-    <center>
-      <h1 class="my-5">Recruiter Login</h1>
-    </center>
-  
+<div id="Paris" class="tabcontent">
+<!-- Recruiter Login -->
+<div class="container mt-5">
+   <h1 class="my-5">Recruiter Login</h1>
     <div class="row">
       <div class="col-sm-12">
         
@@ -79,22 +78,27 @@
         </div>
     
       </div>
-     
-      <div class="col-sm-12" style="margin-top: 20px">
-        <div class="card" style="width: 50%;">
-          <div class="card-body">
-            <a class="btn btn-block" href="/auth/google" role="button">
-              <i class="fab fa-google"></i>
-              Sign In with Google
-            </a>
-          </div>
-        </div>
-      </div>
  
     </div>
   </div>
-</center>
-  </div>   <!-- inner column -->
-</div> <!--  outer Row -->
+<!-- recruiter End -->
+</div>
+
+<script>
+  function openCity(evt, cityName) { 
+  var i, tabcontent, tablinks;
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+  document.getElementById(cityName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+document.getElementById("defaultOpen").click();
+</script>
 
 <%- include('partials/footer') %>

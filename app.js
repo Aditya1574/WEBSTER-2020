@@ -97,6 +97,15 @@ app.get("/logout" , function(req, res){
   res.redirect("/");
 });
 
+// app.get("/Student", function(req, res){
+//   res.send(req.body.username + " " + req.body.password + " " + "Are beinng displayed to you");
+  
+// });
+
+// app.get("/Recruiter", function(req, res){
+//   res.send(req.body.username + " " + req.body.password + " " + "Are beinng displayed to you");
+// });
+
 app.get("/secrets" , function(req, res){
   User.find({"secret": {$ne: null}} , function(err , foundList){
     if(err){
@@ -118,6 +127,10 @@ app.get("/submit" , function(req, res){
 });
 
 app.post("/register" ,function(req, res){
+const temp = {   // add the rest of the entries
+  name: req.body.username,
+  pass: req.body.password
+}
 
 User.register({username: req.body.username} ,req.body.password , function(err , user){
   if(err){
@@ -125,7 +138,12 @@ User.register({username: req.body.username} ,req.body.password , function(err , 
     res.redirect("/register");
   }else{
     passport.authenticate("local")(req, res, function(){
-    res.redirect("/secrets");
+      if(req.body.INDENTITY === "STD"){
+        res.render("Student" , {user: temp});
+        }
+        else{
+        res.render("Recruiter", {user: temp});
+        }
     });
   }
 });
@@ -133,10 +151,14 @@ User.register({username: req.body.username} ,req.body.password , function(err , 
 });
 
 app.post("/login", function(req, res){
-const user = new User({
+const user = new User({  // add More entries here
   username: req.body.username,
   password: req.body.password
 });
+const temp = {
+  name: req.body.username,
+  pass: req.body.password
+}
 req.login(user, function(err){
   if(err){
     console.log(err);
@@ -144,10 +166,10 @@ req.login(user, function(err){
   }else{
     passport.authenticate("local")(req, res, function(){
       if(req.body.INDENTITY === "STDLOGIN"){
-      res.render("Student");
+      res.render("Student" , {user: temp});
       }
       else{
-      res.render("Recruiter");
+      res.render("Recruiter" , {user: temp});
       }
     });
   }

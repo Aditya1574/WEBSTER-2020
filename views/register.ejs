@@ -1,9 +1,14 @@
 <%- include('partials/header') %>
 
-<div class="row">
-  <div class="col-xs-12 col-6">
-<center>
-<div class="container mt-5">
+<div class="tab">
+  <button class="tablinks" onclick="openCity(event, 'London')" id="defaultOpen"><b>Register Student</b></button>
+  <button class="tablinks" onclick="openCity(event, 'Paris')"><b>Register Recruiter</b></button>
+</div>
+
+
+<div id="London" class="tabcontent">
+<!-- Student Start -->
+<div class="container mt-5" style="align-items: center;">
   <h1 class="my-5">Register As Student</h1>
 
   <div class="row">
@@ -22,7 +27,7 @@
               <input type="password" class="form-control" name="password">
             </div>
             <button type="submit" class="btn btn-dark">Register</button>
-            <input type="hidden" name="STD">
+            <input type="hidden" name="IDENTITY" value="STD">
           </form>
 
         </div>
@@ -42,11 +47,12 @@
 
   </div>
 </div>
-</div> <!-- inner column-->
-</center>
+<!-- Student End -->
+</div>
 
-<div class="col-xs-12 col-6">
-  <center>
+<div id="Paris" class="tabcontent">
+  <!-- Recruiter panel -->
+
   <div class="container mt-5">
     <h1 class="my-5">Register As Recruiter</h1>
   
@@ -66,29 +72,33 @@
                 <input type="password" class="form-control" name="password">
               </div>
               <button type="submit" class="btn btn-dark">Register</button>
-              <input type="hidden" name="RCT">
+              <input type="hidden" name="IDENTITY" value="RCT">
             </form>
   
           </div>
         </div>
       </div>
-  
-      <div class="col-sm-12" style="margin-top: 20px;">
-        <div class="card social-block" style="width: 50%;">
-          <div class="card-body">
-            <a class="btn btn-block" href="/auth/google" role="button">
-              <i class="fab fa-google"></i>
-              Sign Up with Google
-            </a>
-          </div>
-        </div>
-      </div>
-  
     </div>
   </div>
-  </div> <!-- inner column-->
-</center>
+  
+  <!-- Recruiter End  -->
+</div>
 
-</div> <!-- outer row -->
+<script>
+  function openCity(evt, cityName) { 
+  var i, tabcontent, tablinks;
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+  document.getElementById(cityName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+document.getElementById("defaultOpen").click();
+</script>
 
 <%- include('partials/header') %>
