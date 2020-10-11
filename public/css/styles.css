@@ -1,7 +1,6 @@
-
 body {
   background-color: #E8ECEF;
-  
+  overflow-y: hidden;
   overflow-x: hidden; /* Hide horizontal scrollbar */
 }
 
@@ -21,4 +20,17 @@ body {
    border: 1px white solid;
    border-radius: 15px;
    box-shadow: 5px 5px 5px 5px #878c88;
+}
+.btn-google{
+  background-color: #db3236;
+  border-radius: 15px;
+}
+.btn-block{
+  color: white;
+  font-size: 20px;
+}
+
+/* ids */
+#MainLogo{
+  z-index: 1;
 }
