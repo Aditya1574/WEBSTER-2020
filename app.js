@@ -16,7 +16,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
 
 app.use(session({
-  secret: "LoveforKrishnaisbiggestSecret",
+  secret: "ThisisaNewSecret",
   resave: false,
   saveUnitialized: false
 }));
@@ -53,6 +53,11 @@ passport.deserializeUser(function(id, done) {          // works for all the stra
   });
 });
 
+
+let TempObj = {
+  name: "",
+  pass: null
+}
 // google added
 passport.use(new GoogleStrategy({
     clientID: process.env.CLIENT_ID,
@@ -61,6 +66,7 @@ passport.use(new GoogleStrategy({
     userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo" //changed
   },
   function(accessToken, refreshToken, profile, cb) {
+    TempObj.name = profile.displayName;
     User.findOrCreate({ googleId: profile.id }, function (err, user) {
       return cb(err, user);
     });
@@ -68,18 +74,20 @@ passport.use(new GoogleStrategy({
 ));
 
 
+
 app.get("/", function(req, res){
   res.render("home");
 });
 
-app.get("/auth/google",                                          //authenticate on google // google added
-  passport.authenticate("google", { scope: ['profile'] }));
-
+app.get("/auth/google",                                          /* "/auth/google" is the First to be invoked path and it is basically a passport */ //google added
+  passport.authenticate("google", { scope: ['profile'] }));     /*  plugin for authenticating the user using   */ 
+                                                              /* google strategy at the Lines : 61-74 and is  demanding for the profile containing all the info about the user */   
 app.get("/auth/google/secrets",
     passport.authenticate("google", { failureRedirect: "/login" }),   //authenticate locally // google added
-    function(req, res) {
-      // Successful authentication, redirect home.
-      res.redirect("/secrets");
+    function(req, res) {                                             /* "/auth/google/secrets" is the Link where one is redirected by google  when  */
+      // Done Finally                                               /* it is authenticated by the google serves */
+    
+      res.render("Student", {user: TempObj});
     });
 
 
@@ -97,36 +105,9 @@ app.get("/logout" , function(req, res){
   res.redirect("/");
 });
 
-// app.get("/Student", function(req, res){
-//   res.send(req.body.username + " " + req.body.password + " " + "Are beinng displayed to you");
-  
-// });
-
-// app.get("/Recruiter", function(req, res){
-//   res.send(req.body.username + " " + req.body.password + " " + "Are beinng displayed to you");
-// });
-
-app.get("/secrets" , function(req, res){
-  User.find({"secret": {$ne: null}} , function(err , foundList){
-    if(err){
-      console.log(err);
-    }else{
-      if(req.isAuthenticated()){res.render("secrets" , {userSecrets: foundList});}
-      else{res.redirect("/login");}
-    }
-  });
-});
 
 
-app.get("/submit" , function(req, res){
-  if(req.isAuthenticated()){
-    res.render("submit");
-  }else{
-    res.send("<h1>Forbidden</h1><hr><h2>Error 401</h2><hr><b>Unauthorised access</b>");
-  }
-});
-
-app.post("/register" ,function(req, res){
+app.post("/register", function(req, res){
 const temp = {   // add the rest of the entries
   name: req.body.username,
   pass: req.body.password
@@ -151,7 +132,7 @@ User.register({username: req.body.username} ,req.body.password , function(err , 
 });
 
 app.post("/login", function(req, res){
-const user = new User({  // add More entries here
+const user = new User({                // add More entries here
   username: req.body.username,
   password: req.body.password
 });
@@ -178,52 +159,10 @@ req.login(user, function(err){
 });
 
 
-app.post("/submit" , function(req, res){
-  const secret = req.body.secret;
-  User.findById(req.user.id , function(err ,  foundUser){
-    if(err){
-      console.log(err);
-    }else{
-      if(foundUser) {
-         foundUser.secret = secret;
-         foundUser.save(function(){
-           res.redirect("/secrets");
-         });
-      } //foundUser if statement
-    } // else
-  }); // findById
-});
 app.listen(3000, function(){
   console.log("The server is Running Properly at Port 3000");
 });
 
 
 
-// for adding something to the secret page using submit page
-// const secretSchema = new mongoose.Schema({secret: String});
-// const Secret = mongoose.model("Secret" , secretSchema);
-//
-// app.post("/submit" , function(req, res){
-//   const newsecret = new Secret({secret: req.body.secret});
-//   newsecret.save(function(err) {
-//     if(err){
-//       console.log(err);
-//     }else{
-//        console.log("Added");
-//        Secret.find({}, function(err, foundList){
-//          if(!err){
-//            res.render("secrets" , {<array-var-name>: foundList});
-//          }
-//        });
-//     }
-//   });
-// });
-//
-// replace
-//  res.render("secrets");
-//  with
-//  Secret.find({}, function(err, foundList){
-//    if(!err){
-//      res.render("secrets" , {<array-var-name>: foundList});
-//    }
-//  });
+
