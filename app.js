@@ -107,6 +107,7 @@ app.get("/logout" , function(req, res){
 
 
 
+
 app.post("/register", function(req, res){
 const temp = {   // add the rest of the entries
   name: req.body.username,
@@ -120,10 +121,10 @@ User.register({username: req.body.username} ,req.body.password , function(err , 
   }else{
     passport.authenticate("local")(req, res, function(){
       if(req.body.INDENTITY === "STD"){
-        res.render("Student" , {user: temp});
+        res.render("Student_edit" , {user: temp});
         }
         else{
-        res.render("Recruiter", {user: temp});
+        res.render("Recruiter_edit", {user: temp});
         }
     });
   }
@@ -147,10 +148,10 @@ req.login(user, function(err){
   }else{
     passport.authenticate("local")(req, res, function(){
       if(req.body.INDENTITY === "STDLOGIN"){
-      res.render("Student" , {user: temp});
+      res.render("Student_login" , {user: temp});
       }
       else{
-      res.render("Recruiter" , {user: temp});
+      res.render("Recruiter_login" , {user: temp});
       }
     });
   }
