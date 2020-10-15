@@ -1,0 +1,158 @@
+<%-  include('partials/header') %>
+
+
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+  <strong>Congratulations! <%= user.name %> </strong> You have succesfully logged in succesfully!!
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  </div>
+
+<div class="container my-5"> 
+    <div class="row">
+        <div class="col-sm-12">
+          <div class="card">
+            <div class="card-body">
+    
+              <!-- Makes POST request to /login route -->
+              <form action="/Student_profile" method="POST">
+                <div class="form-group">
+                  <div class="form-row">
+                    <div class="col">
+                      <label for="fname"><b>First Name</b></label>
+                      <input type="text" class="form-control" name="fname" placeholder="First_name">
+                    </div>
+                    <div class="col">
+                      <label for="lname"><b>Last Name</b></label>
+                      <input type="text" class="form-control" name="lname" placeholder="Last_name">
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="HQ"><b>Highest Qualification</b></label>
+                  <input type="text" class="form-control" name="HQ" id="HQ" placeholder="Highest Qualification">  
+                </div>
+                <div class="form-group">
+                  <label for="course"><b>Course</b></label>
+                  <select class="form-control" name="course" id="course" placeholder="course">
+                    <option>Name_Course_1</option>
+                    <option>Name_Course_2</option>
+                    <option>Name_Course_3</option>
+                    <option>Name_Course_4</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="SPEC"><b>Specialization</b></label>
+                  <select class="form-control" name="SPEC" id="SPEC" placeholder="SPEC">
+                    <option>Name_of_specialistion_1</option>
+                    <option>Name_of_specialistion_2</option>
+                    <option>Name_of_specialistion_3</option>
+                    <option>Name_of_specialistion_4</option>
+                  </select>
+                  </div>
+                  <div class="form-group">
+                  <label for="CLGNAME"><b>College Name</b></label>
+                  <input type="text" class="form-control" id="CLGNAME" name="CLGNAME" placeholder="Collge Name">
+                  </div>
+                  <div class="form-group">
+                    <label for="CT"><b>Course Type</b></label>
+                    <select class="form-control" name="CT" id="CT">
+                      <option>Type_of_course_1</option>
+                      <option>Type_of_course_2</option>
+                      <option>Type_of_course_3</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="PY"><b>Graduation Year</b></label>
+                    <input type="text" class="form-control" id="PY" name="PY" placeholder="Graduation Year">
+                  </div>
+                  <div class="form-group" id="Addtothis">
+                    <label for="Project"><b>Projects</b></label>
+                    <br>
+                    <div class="Pro0">
+                      <label for="name"><b>Project Name</b></label>
+                      <input type="text" class="form-control" name="P1name" id="P1name" placeholder="Project Name">
+                      <label for="Pdesc"><b>Description Of Project</b></label>
+                      <textarea class="form-control" name="P1desc" id="P1desc" cols="30" rows="5" placeholder="Description"></textarea>
+                      <label for="Link1"><b>Github Link / Live Link of Project</b></label>
+                      <input type="url" name="Link1" id="Link1" class="form-control" placeholder="Add Link here">
+                    </div>
+                  </div>
+                  <br>
+                  <button type="button" class="btn btn-outline-secondary" onclick="func1()"><i class="fas fa-plus"></i></button>
+                  <div class="form-group">
+                    <label for="Skill"><b>Skills</b></label>
+                    <input type="text" name="SKILL" id="SKILL" class="form-control" placeholder="Add Skills Here">
+                    
+                  </div>
+                  
+                 <button type="submit" class="btn btn-dark">Submit Details</button>
+                
+              </form>
+    
+            </div>
+          </div>
+          <br>
+            <a class="btn btn-light btn-lg" href="/logout" role="button">Log Out</a>
+        </div>
+    </div>
+</div>
+
+
+<script>
+  let  i = 0;
+  
+  function func1(){
+    i=i+1;
+    const adder = document.createElement("div");
+    const giveID = "Pro" + i;
+    adder.id = giveID;
+    const cont1 = document.getElementById("Addtothis");
+    cont1.appendChild(adder);
+    const label1 = document.createElement("label");
+    label1.innerHTML = "<b>Project Name</b>";
+    label1.setAttribute("for", "name");
+    const ProName = document.createElement("input");
+    const giver = "P" + i + "name";
+    ProName.className = "form-control";
+    ProName.id = giver;
+    ProName.setAttribute("type", "text");
+    ProName.setAttribute("Placeholder" , "Project Name");
+    ProName.setAttribute("name" , giver);
+    const label2 = document.createElement("label");
+    label2.innerHTML = "<b>Description of Project</b>";
+    label2.setAttribute("for", "Pdesc");
+    const DescName = document.createElement("textarea");
+    const giver1 = "P" + i + "desc";
+    DescName.className = "form-control";
+    DescName.id = giver1;
+    DescName.setAttribute("type", "text");
+    DescName.setAttribute("Placeholder" , "Description");
+    DescName.setAttribute("cols" , "30");
+    DescName.setAttribute("rows" , "5");
+    DescName.setAttribute("name" , giver1);
+    const label3 = document.createElement("label");
+    label3.innerHTML = "<b>Github Link / Live Link of Project</b>";
+    label3.setAttribute("for", "Link");
+    const Linker1 = document.createElement("input");
+    const giver2 = "Link" + i;
+    Linker1.className = "form-control";
+    Linker1.id = giver2;
+    Linker1.setAttribute("type", "url");
+    Linker1.setAttribute("Placeholder" , "Add Link Here");
+    Linker1.setAttribute("name" , giver2);
+
+   const cont = document.getElementById(giveID);
+   cont.innerHTML = "<hr>";
+   cont.appendChild(label1);
+   cont.appendChild(ProName);
+   cont.appendChild(label2);
+   cont.appendChild(DescName);
+   cont.appendChild(label3);
+   cont.appendChild(Linker1);
+    
+  }
+</script>
+
+<%-  include('partials/footer') %> 
+
