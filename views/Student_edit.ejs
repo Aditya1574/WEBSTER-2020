@@ -24,7 +24,7 @@
 
 #checkboxes {
   display: none;
-  border: 1px #727171 solid;
+  border: 1px #7272727a solid;
   border-radius: 5px;
 }
 
@@ -71,20 +71,31 @@
                 </div>
                 <div class="form-group">
                   <label for="course"><b>Course</b></label>
-                  <select class="form-control" name="course" id="course" placeholder="course">
-                    <option>Name_Course_1</option>
-                    <option>Name_Course_2</option>
-                    <option>Name_Course_3</option>
-                    <option>Name_Course_4</option>
+                  <select class="form-control" name="course" id="course" placeholder="course"> <!-- use onselect if not getting value using req.body.<name> -->
+                    <option>Bachelor of Technology</option>
+                    <option>Master of Technology</option>
+                    <option>Master of Computer Application</option>
+                    <option>Master of Business Administration</option>
+                    <option>Doctor of Philosophy(PhD)</option>
+                    <option>Master of Science (M.Sc.) in Mathematics and Scientific Computing</option>
                   </select>
                 </div>
                 <div class="form-group">
                   <label for="SPEC"><b>Specialization</b></label>
-                  <select class="form-control" name="SPEC" id="SPEC" placeholder="SPEC">
-                    <option>Name_of_specialistion_1</option>
-                    <option>Name_of_specialistion_2</option>
-                    <option>Name_of_specialistion_3</option>
-                    <option>Name_of_specialistion_4</option>
+                  <select class="form-control" name="SPEC" id="SPEC" placeholder="SPEC"> <!-- use onselect if not getting value using req.body.<name> -->
+                    <option>Bio-Technology</option>
+                    <option>Chemical Engineering</option>
+                    <option>Civil Engineering</option>
+                    <option>Computer Science & Engineering</option>
+                    <option>Electrical Engineering</option>
+                    <option>Electronics & Communication Engineering</option>
+                    <option>Information Technology</option>
+                    <option>Mechanical Engineering</option>
+                    <option>Production & Industrial Engineering</option>
+                    <option>Ph.D. in Engineering </option>
+                    <option>Ph.D. in Management </option>
+                    <option>PhD in Humanities and Social Sciences (HSS) </option>
+                    <option>Ph.D. in Geographic Information System (GIS) Cell </option>
                   </select>
                   </div>
                   <div class="form-group">
@@ -94,9 +105,9 @@
                   <div class="form-group">
                     <label for="CT"><b>Course Type</b></label>
                     <select class="form-control" name="CT" id="CT">
-                      <option>Type_of_course_1</option>
-                      <option>Type_of_course_2</option>
-                      <option>Type_of_course_3</option>
+                      <option>Part-Time</option>
+                      <option>Full-Time</option>
+                      <option>Regular</option>
                     </select>
                   </div>
                   <div class="form-group">
@@ -180,6 +191,7 @@
   
   function func2(){
     i=i+1;
+    localStorage.setItem("Number_of_Projects", i);
     const adder = document.createElement("div");
     const giveID = "Pro" + i;
     adder.id = giveID;
@@ -226,7 +238,7 @@
    cont.appendChild(DescName);
    cont.appendChild(label3);
    cont.appendChild(Linker1);
-    
+   
   }
 // For the Skills Section
   let expanded = false;
