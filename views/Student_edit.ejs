@@ -1,30 +1,67 @@
 <%-  include('partials/header') %>
 
+<style>
+  .multiselect {
+  width: 200px;
+}
+
+.selectBox {
+  position: relative;
+}
+
+.selectBox select {
+  width: 100%;
+  font-weight: bold;
+}
+
+.overSelect {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+
+#checkboxes {
+  display: none;
+  border: 1px #727171 solid;
+  border-radius: 5px;
+}
+
+#checkboxes label {
+  display: block;
+}
+
+#checkboxes label:hover {
+  background-color: #1e90ff;
+}
+</style>
+
 
 <div class="alert alert-success alert-dismissible fade show" role="alert">
-  <strong>Congratulations! <%= user.name %> </strong> You have succesfully logged in succesfully!!
+  <strong>Congratulations! <%= user.name %> </strong> You have succesfully Registerd succesfully!!
   <button type="button" class="close" data-dismiss="alert" aria-label="Close">
     <span aria-hidden="true">&times;</span>
   </button>
   </div>
 
-<div class="container my-5"> 
+<div class="container my-5" > 
     <div class="row">
         <div class="col-sm-12">
           <div class="card">
             <div class="card-body">
     
               <!-- Makes POST request to /login route -->
-              <form action="/Student_profile" method="POST">
+              <form action="/Student_edit" method="POST">
                 <div class="form-group">
                   <div class="form-row">
                     <div class="col">
                       <label for="fname"><b>First Name</b></label>
-                      <input type="text" class="form-control" name="fname" placeholder="First_name">
+                      <input type="text" class="form-control" name="fname" placeholder="First name">
                     </div>
                     <div class="col">
                       <label for="lname"><b>Last Name</b></label>
-                      <input type="text" class="form-control" name="lname" placeholder="Last_name">
+                      <input type="text" class="form-control" name="lname" placeholder="Last name">
                     </div>
                   </div>
                 </div>
@@ -79,10 +116,49 @@
                     </div>
                   </div>
                   <br>
-                  <button type="button" class="btn btn-outline-secondary" onclick="func1()"><i class="fas fa-plus"></i></button>
+                  <button type="button" class="btn btn-outline-secondary" onclick="func1()"><i class="fas fa-plus"></i> Add More</button>
                   <div class="form-group">
                     <label for="Skill"><b>Skills</b></label>
-                    <input type="text" name="SKILL" id="SKILL" class="form-control" placeholder="Add Skills Here">
+                    <div class="multiselect">
+                      <div class="selectBox" onclick="showCheckboxes()">
+                        <select class="form-control">
+                          <option>Select an option</option>
+                        </select>
+                        <div class="overSelect"></div>
+                      </div>
+                      <div id="checkboxes" style="padding-left: 5px">
+                        <label for="1">
+                          <input type="checkbox" id="1" onclick="func1(id,`JavaScript`)"/> JavaScript</label>
+                        <label for="2">
+                          <input type="checkbox" id="2" onclick="func1(id,`C++`)"/> C++</label>
+                        <label for="3">
+                          <input type="checkbox" id="3" onclick="func1(id,`C Language`)"/> C Language</label>
+                        <label for="4">
+                          <input type="checkbox" id="4" onclick="func1(id,`HTML`)"/> HTML</label>  
+                        <label for="5">
+                          <input type="checkbox" id="5" onclick="func1(id,`Bootstrap`)"/> Bootstrap</label>
+                        <label for="6">
+                          <input type="checkbox" id="6" onclick="func1(id,`Node.js`)"/> Node.js</label>
+                        <label for="7">
+                          <input type="checkbox" id="7" onclick="func1(id,`MongoDB`)"/> MongoDB</label>  
+                        <label for="8">
+                          <input type="checkbox" id="8" onclick="func1(id,`Django`)"/> Django</label>  
+                        <label for="9">
+                          <input type="checkbox" id="9" onclick="func1(id,`MySQL`)"/> MySQL</label> 
+                        <label for="10">
+                          <input type="checkbox" id="10" onclick="func1(id,`Pug`)"/> Pug</label> 
+                        <label for="11">
+                          <input type="checkbox" id="11" onclick="func1(id,`Angular`)"/> Angular</label>
+                        <label for="12">
+                          <input type="checkbox" id="12" onclick="func1(id,`Reactjs`)"/> Reactjs</label>
+                        <label for="13">
+                          <input type="checkbox" id="13" onclick="func1(id,`Ruby/Rails`)"/> Ruby/Rails</label>
+                        <label for="14">
+                          <input type="checkbox" id="14" onclick="func1(id,`Python`)"/> Python</label>
+                        <label for="15">
+                           <input type="checkbox" id="15" onclick="func1(id,`Perl`)"/> Perl</label>      
+                      </div>
+                    </div>
                     
                   </div>
                   
@@ -98,7 +174,7 @@
     </div>
 </div>
 
-
+<!-- Separate Plane Old Vanilla Js -->
 <script>
   let  i = 0;
   
@@ -152,6 +228,42 @@
    cont.appendChild(Linker1);
     
   }
+// For the Skills Section
+  let expanded = false;
+
+function showCheckboxes() {
+  let checkboxes = document.getElementById("checkboxes");
+  if (!expanded) {
+    checkboxes.style.display = "block";
+    expanded = true;
+  } else {
+    checkboxes.style.display = "none";
+    expanded = false;
+  }
+}
+
+  function func1(getter, give){
+  let Box = document.getElementById(getter);
+  let CompareValue = Box.value;
+  skills = localStorage.getItem("skills");
+  if(skills === null){
+    SkillObj = [];
+  }else{
+    SkillObj = JSON.parse(skills);
+  } 
+  if(CompareValue === give){
+    let x = SkillObj.indexOf(give, 0);
+    delete SkillObj[x];
+    Box.value="on";
+  }else{
+    Box.value = give;
+    SkillObj.push(give);
+  }
+  let FilteredSkills = SkillObj.filter(function(element){
+    return element != null;
+  });
+  localStorage.setItem("skills", JSON.stringify(FilteredSkills));
+}
 </script>
 
 <%-  include('partials/footer') %> 
