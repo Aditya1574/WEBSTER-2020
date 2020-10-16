@@ -87,7 +87,7 @@ app.get("/auth/google/secrets",
     function(req, res) {                                             /* "/auth/google/secrets" is the Link where one is redirected by google  when  */
       // Done Finally                                               /* it is authenticated by the google serves */
     
-      res.render("Student", {user: TempObj});
+      res.render("Student_login", {user: TempObj});
     });
 
 
@@ -120,7 +120,7 @@ User.register({username: req.body.username} ,req.body.password , function(err , 
     res.redirect("/register");
   }else{
     passport.authenticate("local")(req, res, function(){
-      if(req.body.INDENTITY === "STD"){
+      if(req.body.IDENTITY === "STD"){
         res.render("Student_edit" , {user: temp});
         }
         else{
@@ -147,7 +147,7 @@ req.login(user, function(err){
     res.redirect("/login");
   }else{
     passport.authenticate("local")(req, res, function(){
-      if(req.body.INDENTITY === "STDLOGIN"){
+      if(req.body.IDENTITY === "STDLOGIN"){
       res.render("Student_login" , {user: temp});
       }
       else{
