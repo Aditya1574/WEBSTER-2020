@@ -1,1 +1,168 @@
-<!-- make a Recruiter Editor here -->
+<%-  include('partials/header') %>
+<style>
+  .multiselect {
+  width: 200px;
+}
+
+.selectBox {
+  position: relative;
+}
+
+.selectBox select {
+  width: 100%;
+  font-weight: bold;
+}
+
+.overSelect {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+
+#checkboxes {
+  display: none;
+  border: 1px #727171 solid;
+  border-radius: 5px;
+}
+
+#checkboxes label {
+  display: block;
+}
+
+#checkboxes label:hover {
+  background-color: #1e90ff;
+}
+</style>
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    <strong>Congratulations! <%= user.name %> </strong> You have succesfully logged in succesfully!!
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    </div>
+
+    <div class="container my-5"> 
+      <div class="row">
+          <div class="col-sm-12">
+            <div class="card">
+              <div class="card-body">
+                <form action="/Recruiter_edit" method="POST">
+                 <div class="form-group">
+                   <label for="CNAME"><b>Name of Company</b></label>
+                   <input type="text" name="CNAME" class="form-control" placeholder="Name of Company" id="CNAME">
+                 </div>
+                 <div class="form-group">
+                   <label for="RNAME"><b>Name of Recruiter</b></label>
+                   <input type="text" id="RNAME" name="RNAME" placeholder="Name of Recruiter" class="form-control">
+                 </div>
+                 <div class="form-group">
+                  <div class="form-row">
+                    <div class="col">
+                      <label for="fname"><b>Recruiter Email Id</b></label>
+                      <input type="email" class="form-control" name="fname" placeholder="Recruiter Email">
+                    </div>
+                    <div class="col">
+                      <label for="lname"><b>Offical Email Id of Company</b></label>
+                      <input type="email" class="form-control" name="lname" placeholder="Official Email of Company">
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="PHNO"><b>Recruiter Contact Number</b></label>
+                  <input type="text" name="PHNO" id="PHNO" class="form-control" placeholder="Recruiter Contact Number">
+                </div>
+                 <div class="form-group">
+                  <label for="DNAME"><b>Current Designation of Recruiter</b></label>
+                  <input type="text" name="DNAME" placeholder="Designation of Recruiter" id="DNAME" class="form-control">
+                 </div>
+                 <div class="form-group">
+                   <label for="country"><b>Name of Country for Recruitment</b></label>
+                   <input type="text" name="CoNAME" placeholder="Name of Country" id="CoNAME" class="form-control">
+                 </div>
+                 <div class="form-group">
+                   <label for="CiNAME"><b>Name of City</b></label>
+                  <input type="text" name="CiNAME" id="CiNAME" placeholder="Name of City" class="form-control">
+                 </div>
+                 <div class="form-group">
+                   <label for="HEXP"><b>Hiring Experience of Recruiter</b></label>
+                   <select name="HEXP" id="HEXP" class="form-control">
+                     <option value="0">No Previous Experience</option>
+                     <option value="1">1+ Years</option>
+                     <option value="2">2+ Years</option>
+                     <option value="3">3+ Years</option>
+                     <option value="5">More Than 3 Years</option>
+                   </select>
+                 </div>
+                 <!-- LEVEL FILLER -->
+                <div class="form-group">
+                  <label><b>Level You want to Hire For:</b></label>
+                    <div class="multiselect">
+                      <div class="selectBox" onclick="showCheckboxes()">
+                        <select class="form-control">
+                          <option>Select an option</option>
+                        </select>
+                        <div class="overSelect"></div>
+                      </div>
+                      <div id="checkboxes" style="padding-left: 5px">
+                        <label for="one">
+                          <input type="checkbox" id="one" onclick="func1(id,`Junior Level`)"/> Junior Level</label>
+                        <label for="two">
+                          <input type="checkbox" id="two" onclick="func1(id,`Senior Level`)"/> Senior Level</label>
+                        <label for="three">
+                          <input type="checkbox" id="three" onclick="func1(id,`Higher Level`)"/> Higher Level</label>
+                        <label for="four">
+                          <input type="checkbox" id="four" onclick="func1(id,`Top Management Level`)"/> Top Management Level</label>  
+                      </div>
+                    </div>
+                </div>
+                <!-- LEVEL FILLERS -->
+                <div class="form-group">
+                  <!-- ADD HERE -->
+                </div>
+                <button type="submit" class="btn btn-dark">Submit Details</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+              
+<script>
+  let expanded = false;
+
+function showCheckboxes() {
+  let checkboxes = document.getElementById("checkboxes");
+  if (!expanded) {
+    checkboxes.style.display = "block";
+    expanded = true;
+  } else {
+    checkboxes.style.display = "none";
+    expanded = false;
+  }
+}
+
+function func1(getter, give){
+  let Box = document.getElementById(getter);
+  let CompareValue = Box.value;
+  let levels = localStorage.getItem("levels");
+  if(levels === null){
+    LevelObj = [];
+  }else{
+    LevelObj = JSON.parse(levels);
+  } 
+  if(CompareValue === give){
+    let x = LevelObj.indexOf(give, 0);
+    delete LevelObj[x];
+    Box.value="on";
+  }else{
+    Box.value = give;
+    LevelObj.push(give);
+  }
+  let FilteredLevel = LevelObj.filter(function(element){
+    return element != null;
+  });
+  localStorage.setItem("levels", JSON.stringify(FilteredLevel));
+}
+</script>
+<%-  include('partials/footer') %>
