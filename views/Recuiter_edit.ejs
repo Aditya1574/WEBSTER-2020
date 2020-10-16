@@ -1,5 +1,4 @@
 <%-  include('partials/header') %>
-
 <style>
   .multiselect {
   width: 200px;
@@ -24,7 +23,7 @@
 
 #checkboxes {
   display: none;
-  border: 1px #7272727a solid;
+  border: 1px #727171 solid;
   border-radius: 5px;
 }
 
@@ -36,100 +35,68 @@
   background-color: #1e90ff;
 }
 </style>
-
-
 <div class="alert alert-success alert-dismissible fade show" role="alert">
-  <strong>Congratulations! <%= user.name %> </strong> You have succesfully Registerd succesfully!!
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-  </div>
+    <strong>Congratulations! <%= user.name %> </strong> You have succesfully logged in succesfully!!
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    </div>
 
-<div class="container my-5" > 
-    <div class="row">
-        <div class="col-sm-12">
-          <div class="card">
-            <div class="card-body">
-    
-              <!-- Makes POST request to /login route -->
-              <form action="/Student_edit" method="POST">
-                <div class="form-group">
+    <div class="container my-5"> 
+      <div class="row">
+          <div class="col-sm-12">
+            <div class="card">
+              <div class="card-body">
+                <form action="/Recruiter_edit" method="POST">
+                 <div class="form-group">
+                   <label for="CNAME"><b>Name of Company</b></label>
+                   <input type="text" name="CNAME" class="form-control" placeholder="Name of Company" id="CNAME">
+                 </div>
+                 <div class="form-group">
+                   <label for="RNAME"><b>Name of Recruiter</b></label>
+                   <input type="text" id="RNAME" name="RNAME" placeholder="Name of Recruiter" class="form-control">
+                 </div>
+                 <div class="form-group">
                   <div class="form-row">
                     <div class="col">
-                      <label for="fname"><b>First Name</b></label>
-                      <input type="text" class="form-control" name="fname" placeholder="First name">
+                      <label for="fname"><b>Recruiter Email Id</b></label>
+                      <input type="email" class="form-control" name="fname" placeholder="Recruiter Email">
                     </div>
                     <div class="col">
-                      <label for="lname"><b>Last Name</b></label>
-                      <input type="text" class="form-control" name="lname" placeholder="Last name">
+                      <label for="lname"><b>Offical Email Id of Company</b></label>
+                      <input type="email" class="form-control" name="lname" placeholder="Official Email of Company">
                     </div>
                   </div>
                 </div>
                 <div class="form-group">
-                  <label for="HQ"><b>Highest Qualification</b></label>
-                  <input type="text" class="form-control" name="HQ" id="HQ" placeholder="Highest Qualification">  
+                  <label for="PHNO"><b>Recruiter Contact Number</b></label>
+                  <input type="text" name="PHNO" id="PHNO" class="form-control" placeholder="Recruiter Contact Number">
                 </div>
+                 <div class="form-group">
+                  <label for="DNAME"><b>Current Designation of Recruiter</b></label>
+                  <input type="text" name="DNAME" placeholder="Designation of Recruiter" id="DNAME" class="form-control">
+                 </div>
+                 <div class="form-group">
+                   <label for="country"><b>Name of Country for Recruitment</b></label>
+                   <input type="text" name="CoNAME" placeholder="Name of Country" id="CoNAME" class="form-control">
+                 </div>
+                 <div class="form-group">
+                   <label for="CiNAME"><b>Name of City</b></label>
+                  <input type="text" name="CiNAME" id="CiNAME" placeholder="Name of City" class="form-control">
+                 </div>
+                 <div class="form-group">
+                   <label for="HEXP"><b>Hiring Experience of Recruiter</b></label>
+                   <select name="HEXP" id="HEXP" class="form-control">
+                     <option value="0">No Previous Experience</option>
+                     <option value="1">1+ Years</option>
+                     <option value="2">2+ Years</option>
+                     <option value="3">3+ Years</option>
+                     <option value="5">More Than 3 Years</option>
+                   </select>
+                 </div>
+                 <!-- LEVEL FILLER -->
                 <div class="form-group">
-                  <label for="course"><b>Course</b></label>
-                  <select class="form-control" name="course" id="course" placeholder="course"> <!-- use onselect if not getting value using req.body.<name> -->
-                    <option>Bachelor of Technology</option>
-                    <option>Master of Technology</option>
-                    <option>Master of Computer Application</option>
-                    <option>Master of Business Administration</option>
-                    <option>Doctor of Philosophy(PhD)</option>
-                    <option>Master of Science (M.Sc.) in Mathematics and Scientific Computing</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label for="SPEC"><b>Specialization</b></label>
-                  <select class="form-control" name="SPEC" id="SPEC" placeholder="SPEC"> <!-- use onselect if not getting value using req.body.<name> -->
-                    <option>Bio-Technology</option>
-                    <option>Chemical Engineering</option>
-                    <option>Civil Engineering</option>
-                    <option>Computer Science & Engineering</option>
-                    <option>Electrical Engineering</option>
-                    <option>Electronics & Communication Engineering</option>
-                    <option>Information Technology</option>
-                    <option>Mechanical Engineering</option>
-                    <option>Production & Industrial Engineering</option>
-                    <option>Ph.D. in Engineering </option>
-                    <option>Ph.D. in Management </option>
-                    <option>PhD in Humanities and Social Sciences (HSS) </option>
-                    <option>Ph.D. in Geographic Information System (GIS) Cell </option>
-                  </select>
-                  </div>
-                  <div class="form-group">
-                  <label for="CLGNAME"><b>College Name</b></label>
-                  <input type="text" class="form-control" id="CLGNAME" name="CLGNAME" placeholder="Collge Name">
-                  </div>
-                  <div class="form-group">
-                    <label for="CT"><b>Course Type</b></label>
-                    <select class="form-control" name="CT" id="CT">
-                      <option>Part-Time</option>
-                      <option>Full-Time</option>
-                      <option>Regular</option>
-                    </select>
-                  </div>
-                  <div class="form-group">
-                    <label for="PY"><b>Graduation Year</b></label>
-                    <input type="text" class="form-control" id="PY" name="PY" placeholder="Graduation Year">
-                  </div>
-                  <div class="form-group" id="Addtothis">
-                    <label for="Project"><b>Projects</b></label>
-                    <br>
-                    <div class="Pro0">
-                      <label for="name"><b>Project Name</b></label>
-                      <input type="text" class="form-control" name="P1name" id="P1name" placeholder="Project Name">
-                      <label for="Pdesc"><b>Description Of Project</b></label>
-                      <textarea class="form-control" name="P1desc" id="P1desc" cols="30" rows="5" placeholder="Description"></textarea>
-                      <label for="Link1"><b>Github Link / Live Link of Project</b></label>
-                      <input type="url" name="Link1" id="Link1" class="form-control" placeholder="Add Link here">
-                    </div>
-                  </div>
-                  <br>
-                  <button type="button" class="btn btn-outline-secondary" onclick="func2()"><i class="fas fa-plus"></i> Add More</button>
-                  <div class="form-group">
-                    <label for="Skill"><b>Skills</b></label>
+                  <label><b>Level You want to Hire For:</b></label>
                     <div class="multiselect">
                       <div class="selectBox" onclick="showCheckboxes()">
                         <select class="form-control">
@@ -138,109 +105,30 @@
                         <div class="overSelect"></div>
                       </div>
                       <div id="checkboxes" style="padding-left: 5px">
-                        <label for="1">
-                          <input type="checkbox" id="1" onclick="func1(id,`JavaScript`)"/> JavaScript</label>
-                        <label for="2">
-                          <input type="checkbox" id="2" onclick="func1(id,`C++`)"/> C++</label>
-                        <label for="3">
-                          <input type="checkbox" id="3" onclick="func1(id,`C Language`)"/> C Language</label>
-                        <label for="4">
-                          <input type="checkbox" id="4" onclick="func1(id,`HTML`)"/> HTML</label>  
-                        <label for="5">
-                          <input type="checkbox" id="5" onclick="func1(id,`Bootstrap`)"/> Bootstrap</label>
-                        <label for="6">
-                          <input type="checkbox" id="6" onclick="func1(id,`Node.js`)"/> Node.js</label>
-                        <label for="7">
-                          <input type="checkbox" id="7" onclick="func1(id,`MongoDB`)"/> MongoDB</label>  
-                        <label for="8">
-                          <input type="checkbox" id="8" onclick="func1(id,`Django`)"/> Django</label>  
-                        <label for="9">
-                          <input type="checkbox" id="9" onclick="func1(id,`MySQL`)"/> MySQL</label> 
-                        <label for="10">
-                          <input type="checkbox" id="10" onclick="func1(id,`Pug`)"/> Pug</label> 
-                        <label for="11">
-                          <input type="checkbox" id="11" onclick="func1(id,`Angular`)"/> Angular</label>
-                        <label for="12">
-                          <input type="checkbox" id="12" onclick="func1(id,`Reactjs`)"/> Reactjs</label>
-                        <label for="13">
-                          <input type="checkbox" id="13" onclick="func1(id,`Ruby/Rails`)"/> Ruby/Rails</label>
-                        <label for="14">
-                          <input type="checkbox" id="14" onclick="func1(id,`Python`)"/> Python</label>
-                        <label for="15">
-                           <input type="checkbox" id="15" onclick="func1(id,`Perl`)"/> Perl</label>      
+                        <label for="one">
+                          <input type="checkbox" id="one" onclick="func1(id,`Junior Level`)"/> Junior Level</label>
+                        <label for="two">
+                          <input type="checkbox" id="two" onclick="func1(id,`Senior Level`)"/> Senior Level</label>
+                        <label for="three">
+                          <input type="checkbox" id="three" onclick="func1(id,`Higher Level`)"/> Higher Level</label>
+                        <label for="four">
+                          <input type="checkbox" id="four" onclick="func1(id,`Top Management Level`)"/> Top Management Level</label>  
                       </div>
                     </div>
-                    
-                  </div>
-                  
-                 <button type="submit" class="btn btn-dark">Submit Details</button>
-                
-              </form>
-    
+                </div>
+                <!-- LEVEL FILLERS -->
+                <div class="form-group">
+                  <!-- ADD HERE -->
+                </div>
+                <button type="submit" class="btn btn-dark">Submit Details</button>
+                </form>
+              </div>
             </div>
           </div>
-          <br>
-            <a class="btn btn-light btn-lg" href="/logout" role="button">Log Out</a>
         </div>
-    </div>
-</div>
-
-<!-- Separate Plane Old Vanilla Js -->
+      </div>
+              
 <script>
-  let  i = 0;
-  
-  function func2(){
-    i=i+1;
-    localStorage.setItem("Number_of_Projects", i);
-    const adder = document.createElement("div");
-    const giveID = "Pro" + i;
-    adder.id = giveID;
-    const cont1 = document.getElementById("Addtothis");
-    cont1.appendChild(adder);
-    const label1 = document.createElement("label");
-    label1.innerHTML = "<b>Project Name</b>";
-    label1.setAttribute("for", "name");
-    const ProName = document.createElement("input");
-    const giver = "P" + i + "name";
-    ProName.className = "form-control";
-    ProName.id = giver;
-    ProName.setAttribute("type", "text");
-    ProName.setAttribute("Placeholder" , "Project Name");
-    ProName.setAttribute("name" , giver);
-    const label2 = document.createElement("label");
-    label2.innerHTML = "<b>Description of Project</b>";
-    label2.setAttribute("for", "Pdesc");
-    const DescName = document.createElement("textarea");
-    const giver1 = "P" + i + "desc";
-    DescName.className = "form-control";
-    DescName.id = giver1;
-    DescName.setAttribute("type", "text");
-    DescName.setAttribute("Placeholder" , "Description");
-    DescName.setAttribute("cols" , "30");
-    DescName.setAttribute("rows" , "5");
-    DescName.setAttribute("name" , giver1);
-    const label3 = document.createElement("label");
-    label3.innerHTML = "<b>Github Link / Live Link of Project</b>";
-    label3.setAttribute("for", "Link");
-    const Linker1 = document.createElement("input");
-    const giver2 = "Link" + i;
-    Linker1.className = "form-control";
-    Linker1.id = giver2;
-    Linker1.setAttribute("type", "url");
-    Linker1.setAttribute("Placeholder" , "Add Link Here");
-    Linker1.setAttribute("name" , giver2);
-
-   const cont = document.getElementById(giveID);
-   cont.innerHTML = "<hr>";
-   cont.appendChild(label1);
-   cont.appendChild(ProName);
-   cont.appendChild(label2);
-   cont.appendChild(DescName);
-   cont.appendChild(label3);
-   cont.appendChild(Linker1);
-   
-  }
-// For the Skills Section
   let expanded = false;
 
 function showCheckboxes() {
@@ -254,29 +142,27 @@ function showCheckboxes() {
   }
 }
 
-  function func1(getter, give){
+function func1(getter, give){
   let Box = document.getElementById(getter);
   let CompareValue = Box.value;
-  skills = localStorage.getItem("skills");
-  if(skills === null){
-    SkillObj = [];
+  let levels = localStorage.getItem("levels");
+  if(levels === null){
+    LevelObj = [];
   }else{
-    SkillObj = JSON.parse(skills);
+    LevelObj = JSON.parse(levels);
   } 
   if(CompareValue === give){
-    let x = SkillObj.indexOf(give, 0);
-    delete SkillObj[x];
+    let x = LevelObj.indexOf(give, 0);
+    delete LevelObj[x];
     Box.value="on";
   }else{
     Box.value = give;
-    SkillObj.push(give);
+    LevelObj.push(give);
   }
-  let FilteredSkills = SkillObj.filter(function(element){
+  let FilteredLevel = LevelObj.filter(function(element){
     return element != null;
   });
-  localStorage.setItem("skills", JSON.stringify(FilteredSkills));
+  localStorage.setItem("levels", JSON.stringify(FilteredLevel));
 }
 </script>
-
-<%-  include('partials/footer') %> 
-
+<%-  include('partials/footer') %>
