@@ -124,7 +124,7 @@ User.register({username: req.body.username} ,req.body.password , function(err , 
         res.render("Student_edit" , {user: temp});
         }
         else{
-        res.render("Recruiter_edit", {user: temp});
+        res.render("Recuiter_edit", {user: temp});
         }
     });
   }
