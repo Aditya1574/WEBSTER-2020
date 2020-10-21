@@ -132,8 +132,8 @@
                     <label for="Skill"><b>Skills</b></label>
                     <div class="multiselect">
                       <div class="selectBox" onclick="showCheckboxes()">
-                        <select class="form-control">
-                          <option>Select an option</option>
+                        <select class="form-control" name="skillwala">
+                          <option id="skillwala">Select an option</option>
                         </select>
                         <div class="overSelect"></div>
                       </div>
@@ -187,6 +187,7 @@
 
 <!-- Separate Plane Old Vanilla Js -->
 <script>
+localStorage.clear();
   let  i = 0;
   
   function func2(){
@@ -274,6 +275,9 @@ function showCheckboxes() {
   let FilteredSkills = SkillObj.filter(function(element){
     return element != null;
   });
+  let Putter = document.getElementById("skillwala");
+  Putter.value = FilteredSkills;
+
   localStorage.setItem("skills", JSON.stringify(FilteredSkills));
 }
 </script>
