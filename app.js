@@ -9,6 +9,10 @@ const session = require("express-session");
 const GoogleStrategy = require('passport-google-oauth20').Strategy;  // google added
 const findOrCreate = require("mongoose-findorcreate");    // google added
 
+let TempObj = {
+  name: "",
+  type: ""
+}
 
 const app = express();
 app.set("view engine" , "ejs");
@@ -41,6 +45,11 @@ Experience: String,
 Level: String
 });
 
+recruiterSchema.plugin(passportLocalMongoose); //for Recruiter
+const Recruiter = mongoose.model("recruiter", recruiterSchema);
+
+
+
 const projectSchema = new mongoose.Schema({
   Name: String,
   Desc: String,
@@ -64,22 +73,27 @@ Skills: [String]
 });
 
 studentSchema.plugin(passportLocalMongoose); // for Student 
-recruiterSchema.plugin(passportLocalMongoose); //for Recruiter
 studentSchema.plugin(findOrCreate);  // google added
 
 
 const User = mongoose.model("User", studentSchema);
 const project = mongoose.model("project" , projectSchema);
-const Recruiter = mongoose.model("recruiter", recruiterSchema);
 
-passport.use(User.createStrategy()); // Student
-passport.use(Recruiter.createStrategy()); //Recruiter
+function StrategyCreator(Type){   //Strategy Created on the basis of Condition 
+  if(Type === "STD"){
+    passport.use(User.createStrategy()); // Student
+  }else{
+    passport.use(Recruiter.createStrategy()); //Recruiter
+  }
+}
 
-passport.serializeUser(function(user, done) {    //student // works for all the strategies // google added
-  done(null, user.id);
+
+
+passport.serializeUser(function(user, done) {  //student // works for all the strategies // google added
+ done(null, user.id);
 });
 
-passport.deserializeUser(function(id, done) {   //Student // works for all the strategies // google added                                              
+passport.deserializeUser(function(id, done) {  //Student // works for all the strategies // google added                                                                                         
   User.findById(id, function(err, user) {   
   done(err, user);
   });
@@ -88,9 +102,7 @@ passport.deserializeUser(function(id, done) {   //Student // works for all the s
   });
 });
 
-let TempObj = {
-  name: ""
-}
+
 // google added
 passport.use(new GoogleStrategy({
     clientID: process.env.CLIENT_ID,
@@ -123,13 +135,7 @@ app.get("/auth/google/secrets",
       res.render("Student_login", {user: TempObj});
 });
 
-app.get("/Student_edit", function(req, res){
-if(req.isAuthenticated()){
-  res.render("Student_edit", {user: TempObj});
-}else{
-  res.redirect("/register");
-}
-});
+
 
 app.get("/login", function(req, res){
   res.render("login");
@@ -151,35 +157,44 @@ app.post("/Student_edit", function(req, res){
   console.log(y);
 });
 
+app.post("/Recruiter_edit", function(req, res){
+  console.log(req.body);
+  let x  = req.body.levels;
+  let y = x.split(",");
+  console.log(y);
+});
 
 app.post("/student_register", function(req, res){
- 
+
 TempObj.name = req.body.username;
-User.register({username: req.body.username}, req.body.password , function(err , user){
+StrategyCreator(req.body.IDENTITY);
+  User.register({username: req.body.username}, req.body.password , function(err , user){
   if(err){
     console.log(err + " at Student register route" );
     res.redirect("/register");
   }else{
+    console.log(TempObj);
     passport.authenticate("local")(req, res, function(){
-        res.redirect("/Student_edit");
+      res.render("Student_edit", {user: TempObj});
     });
   }
 });
 
 });
 
-app.post("/recruiter_register", function(req, res){
-TempObj.name = req.body.username;
+app.post("/recruiter_register" , function(req, res){
+  TempObj = req.body.username;
+  StrategyCreator(req.body.IDENTITY);
   Recruiter.register({username: req.body.username}, req.body.password, function(err, recruiter){
-     if(err){
-       console.log(err + " at Recruiter register Route");
-       res.redirect("/register");
-     }else{
-       passport.authenticate("local")(req, res, function(){
-        res.render("Recruiter_edit", {user: TempObj});
-       });
-     }
-   });
+    if(err){
+      console.log(err + " at Recruiter register Route");
+      res.redirect("/register");
+    }else{
+      passport.authenticate("local")(req, res, function(){
+       res.render("Recruiter_edit", {user: TempObj});
+      });
+    }
+  });
 });
 
 app.post("/student_login", function(req, res){
