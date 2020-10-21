@@ -99,8 +99,8 @@
                   <label><b>Level You want to Hire For:</b></label>
                     <div class="multiselect">
                       <div class="selectBox" onclick="showCheckboxes()">
-                        <select class="form-control">
-                          <option>Select an option</option>
+                        <select class="form-control" name="levels">
+                          <option id="levels">Select an option</option>
                         </select>
                         <div class="overSelect"></div>
                       </div>
@@ -122,6 +122,8 @@
                 </div>
                 <button type="submit" class="btn btn-dark">Submit Details</button>
                 </form>
+                <br>
+                <a class="btn btn-light btn-lg" href="/logout" role="button">Log Out</a>
               </div>
             </div>
           </div>
@@ -129,6 +131,7 @@
       </div>
               
 <script>
+  localStorage.clear();
   let expanded = false;
 
 function showCheckboxes() {
@@ -162,6 +165,10 @@ function func1(getter, give){
   let FilteredLevel = LevelObj.filter(function(element){
     return element != null;
   });
+
+  const Putter = document.getElementById("levels");
+  Putter.value = FilteredLevel;
+
   localStorage.setItem("levels", JSON.stringify(FilteredLevel));
 }
 </script>
