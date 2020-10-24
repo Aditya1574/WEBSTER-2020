@@ -1,5 +1,14 @@
 <%- include('partials/header') %>
-
+<style>
+  body{
+  background-image: url("images/Back.jpg");
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100%;
+  }
+</style>
 <div class="tab">
   <button class="tablinks" onclick="openCity(event, 'London')" id="defaultOpen"><b>Register Student</b></button>
   <button class="tablinks" onclick="openCity(event, 'Paris')"><b>Register Recruiter</b></button>
@@ -19,15 +28,15 @@
           <!-- Makes POST request to /register route -->
           <form action="/student_register" method="POST">
             <div class="form-group">
-              <label for="email"><b>Email</b></label>
-              <input type="email" class="form-control" name="username">
+              <label for="username"><b>Set Username</b></label>
+              <input type="text" class="form-control" name="username" placeholder="Username">
             </div>
             <div class="form-group">
               <label for="password"><b>Password</b></label>
-              <input type="password" class="form-control" name="password">
+              <input type="password" class="form-control" name="password" placeholder="Password">
             </div>
             <button type="submit" class="btn btn-dark">Register</button>
-           
+            <input type="hidden" name="IDENTITY" value="STD">
           </form>
 
         </div>
@@ -50,7 +59,7 @@
   </div>
 </div>
 <!-- Student End -->
-</div>
+</div>   
 
 <div id="Paris" class="tabcontent">
   <!-- Recruiter panel -->
@@ -66,24 +75,23 @@
             <!-- Makes POST request to /register route -->
             <form action="/recruiter_register" method="POST">
               <div class="form-group">
-                <label for="email"><b>Email</b></label>
-                <input type="email" class="form-control" name="username">
+                <label for="username"><b>Set Username</b></label>
+                <input type="text" class="form-control" name="username" placeholder="Username">
               </div>
               <div class="form-group">
                 <label for="password"><b>Password</b></label>
-                <input type="password" class="form-control" name="password">
+                <input type="password" class="form-control" name="password" placeholder="Password">
               </div>
               <button type="submit" class="btn btn-dark">Register</button>
-             
+              <input type="hidden" name="IDENTITY" value="RCT">
             </form>
   
           </div>
         </div>
       </div>
     </div>
-  </div>
-  
-  <!-- Recruiter End  -->
+  </div> 
+<!-- Recruiter End  -->
 </div>
 
 <script>
