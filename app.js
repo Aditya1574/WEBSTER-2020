@@ -1,7 +1,5 @@
 //jshint esversion:6
-// const fs = require("fs"); 
-// const path = require("path"); 
-// const multer = require("multer");
+
 require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
@@ -11,13 +9,18 @@ const passportLocalMongoose = require("passport-local-mongoose");
 const session = require("express-session");
 const GoogleStrategy = require('passport-google-oauth20').Strategy;  // google added
 const findOrCreate = require("mongoose-findorcreate");    // google added
-
+// const fs = require("fs"); 
+// const path = require("path");      
+// const multer = require("multer");   
 
 let TempObj = {
   name: "",
-  type: ""
+  type: "",
+  googleId: "",
 }
 
+let status = "";
+let where = "";
 
 const app = express();
 app.set("view engine" , "ejs");
@@ -168,7 +171,20 @@ passport.use(new GoogleStrategy({
     userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo" //changed
   },
   function(accessToken, refreshToken, profile, cb) {
+    // console.log(profile);
     TempObj.name = profile.displayName;
+    TempObj.googleId = profile.id;
+    User.find({googleId: profile.id}, function(err, Items){
+      if(err){
+       console.log(err);
+      }else{
+       if(Items.length === 0){
+        status = "New Registration";
+        }else{
+        status= "Old Registration";
+      }
+     }
+    });
     User.findOrCreate({ googleId: profile.id }, function (err, user) {
       return cb(err, user);
     });
@@ -186,10 +202,14 @@ app.get("/auth/google",                                           /* "/auth/goog
                                                                   /* google strategy at the Lines : 61-74 and is  demanding for the profile containing all the info about the user */   
 app.get("/auth/google/secrets",
     passport.authenticate("google", { failureRedirect: "/login" }),   //authenticate locally // google added
-    function(req, res) {                                             /* "/auth/google/secrets" is the Link where one is redirected by google  when  */
-      // Done Finally                                               /* it is authenticated by the google serves */
-    
-      res.render("Student_login", {user: TempObj});
+    function(req, res) {                                              /* "/auth/google/secrets" is the Link where one is redirected by google  when  */
+      // Sends to Edit Page if Not Already Registered                 /* it is authenticated by the google serves */
+      if(status === "New Registration"){
+        where = "FromGoogle";
+        res.render("Student_edit", {user: TempObj});
+      }else{
+        res.render("Student_login", {user: TempObj});
+    }
 });
 
 
@@ -208,7 +228,7 @@ app.get("/logout" , function(req, res){
 });
 
 app.post("/Student_edit", function(req, res){
-
+  let Rec_Id  = req.body.Gid;
   let Rec_name = req.body.username;
   console.log(req.body);
   let x  = req.body.skillwala;
@@ -235,7 +255,7 @@ app.post("/Student_edit", function(req, res){
    YOG: req.body.YOG,
    CPI: req.body.CPI
   };
-
+//------------------------------------image------------------------------------------------------------------------->
 // let obj = { 
 //     name: req.body.Profile_pic, 
 //     img: { 
@@ -251,7 +271,7 @@ app.post("/Student_edit", function(req, res){
 //         console.log("Created Succesfully");
 //     } 
 // });
-
+//------------------------------------image------------------------------------------------------------------------->
   let Final_insertion = {
     first_name: req.body.fname,
     last_name: req.body.lname,
@@ -266,13 +286,24 @@ app.post("/Student_edit", function(req, res){
     Hobbies: y1
     // profilePic: obj
   };
+  if(where === "FromGoogle"){
+    User.updateMany({googleId: Rec_Id}, {$set: Final_insertion}, function(err, res){
+      if(err){
+        console.log(err + " At Google Student Route");
+      }else{
+        where = "";
+        console.log("Updated Google Account SuccessFully"+ "Where=" + where);
+      }
+    });
+  }else{
   User.updateMany({username: Rec_name}, {$set: Final_insertion}, function(err, res){
     if (err){
-      console.log(err);
+      console.log(err + " At the Student Route");
     }else{
       console.log("Updated SuccessFully");
     }
   });
+}
   
 });
 
@@ -296,7 +327,7 @@ app.post("/Recruiter_edit", function(req, res){
   };
   Recruiter.updateMany({username: Rec_Name}, {$set: Final_one}, function(err, res){
     if(err){
-      console.log(err);
+      console.log(err + " At the Recruiter Route");
     }else{
       console.log("updated Successfully");
     }
