@@ -1,6 +1,16 @@
 <%-  include('partials/header') %>
-
+<!-- Removed Year of graduation -->
+<!-- Removed HQ -->
+<!-- Removed College -->
 <style>
+body{
+background-image: url("images/Back.jpg");
+background-position: center;
+background-attachment: fixed;
+background-repeat: no-repeat;
+background-size: cover;
+height: 100%;
+}
   .multiselect {
   width: 200px;
 }
@@ -24,16 +34,23 @@
 
 #checkboxes {
   display: none;
-  border: 1px #7272727a solid;
-  border-radius: 5px;
+  border: 1px #5a5a5a7a solid;
+  border-radius: 0 0 5px 5px;
 }
+
+#checkboxes1 {
+  display: none;
+  border: 1px #5a5a5a7a solid;
+  border-radius: 0 0 5px 5px;
+}
+
 
 #checkboxes label {
   display: block;
 }
 
 #checkboxes label:hover {
-  background-color: #1e90ff;
+  background-color: #32fff5a8;
 }
 </style>
 
@@ -66,10 +83,6 @@
                   </div>
                 </div>
                 <div class="form-group">
-                  <label for="HQ"><b>Highest Qualification</b></label>
-                  <input type="text" class="form-control" name="HQ" id="HQ" placeholder="Highest Qualification">  
-                </div>
-                <div class="form-group">
                   <label for="course"><b>Course</b></label>
                   <select class="form-control" name="course" id="course" placeholder="course"> <!-- use onselect if not getting value using req.body.<name> -->
                     <option>Bachelor of Technology</option>
@@ -99,10 +112,6 @@
                   </select>
                   </div>
                   <div class="form-group">
-                  <label for="CLGNAME"><b>College Name</b></label>
-                  <input type="text" class="form-control" id="CLGNAME" name="CLGNAME" placeholder="Collge Name">
-                  </div>
-                  <div class="form-group">
                     <label for="CT"><b>Course Type</b></label>
                     <select class="form-control" name="CT" id="CT">
                       <option>Part-Time</option>
@@ -110,20 +119,16 @@
                       <option>Regular</option>
                     </select>
                   </div>
-                  <div class="form-group">
-                    <label for="PY"><b>Graduation Year</b></label>
-                    <input type="text" class="form-control" id="PY" name="PY" placeholder="Graduation Year">
-                  </div>
                   <div class="form-group" id="Addtothis">
                     <label for="Project"><b>Projects</b></label>
                     <br>
                     <div class="Pro0">
                       <label for="name"><b>Project Name</b></label>
-                      <input type="text" class="form-control" name="P1name" id="P1name" placeholder="Project Name">
+                      <input type="text" class="form-control" name="P0name" id="P0name" placeholder="Project Name">
                       <label for="Pdesc"><b>Description Of Project</b></label>
-                      <textarea class="form-control" name="P1desc" id="P1desc" cols="30" rows="5" placeholder="Description"></textarea>
+                      <textarea class="form-control" name="P0desc" id="P0desc" cols="30" rows="5" placeholder="Description"></textarea>
                       <label for="Link1"><b>Github Link / Live Link of Project</b></label>
-                      <input type="url" name="Link1" id="Link1" class="form-control" placeholder="Add Link here">
+                      <input type="url" name="Link0" id="Link0" class="form-control" placeholder="Add Link here">
                     </div>
                   </div>
                   <br>
@@ -169,27 +174,93 @@
                         <label for="15">
                            <input type="checkbox" id="15" onclick="func1(id,`Perl`)"/> Perl</label>      
                       </div>
-                    </div>
-                    
+                    </div> 
                   </div>
-                  
-                 <button type="submit" class="btn btn-dark">Submit Details</button>
-                
-              </form>
-    
-            </div>
+                  <div class="form-group">
+                    <label for="Hobby"><b>Hobbies</b></label>
+                    <div class="multiselect">
+                      <div class="selectBox" onclick="showCheckboxes1()">
+                        <select class="form-control" name="HobbyWala">
+                          <option id="HobbyWala">Select an option</option>
+                        </select>
+                        <div class="overSelect"></div>
+                      </div>
+                      <div id="checkboxes1" style="padding-left: 5px">
+                        <label for="1">
+                          <input type="checkbox" id="1" onclick="func3(id,`Reading`)"/> Reading</label>
+                        <label for="2">
+                          <input type="checkbox" id="2" onclick="func3(id,`Gaming`)"/> Gaming</label>
+                        <label for="3">
+                          <input type="checkbox" id="3" onclick="func3(id,`Writing`)"/> Writing</label>
+                        <label for="4">
+                          <input type="checkbox" id="4" onclick="func3(id,`Vlogging`)"/> Vlogging</label>
+                        <label for="5">
+                          <input type="checkbox" id="5" onclick="func3(id,`NetFixing`)"/> NetFixing</label>
+                        <label for="6">
+                          <input type="checkbox" id="5" onclick="func3(id,`Cycling`)"/> Cycling</label> 
+                        <label for="7">
+                          <input type="checkbox" id="5" onclick="func3(id,`Driving`)"/> Driving</label>       
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="Linkdn"><b>Add Your Linkdn Profile ID here:</b></label>
+                    <input type="url" class="form-control" name="LINKDN" id="LINKDN" placeholder="Add Linkdn Profile id">
+                  </div>
+                  <div class="row">
+                    <div class="col-xs-12 col-3 form-group">
+                      <label for="School"><b>Name Of School</b></label>
+                       <input type="text" name="NOS" id="NOS" class="form-control" placeholder="Name of School">
+                    </div>
+                    <div class="col-xs-12 col-3 form-group">
+                      <label for="NOB"><b>Name of Board</b></label>
+                       <input type="text" name="NOB" id="NOB" class="form-control" placeholder="Name of Board"> 
+                    </div>
+                    <div class="col-xs-12 col-3 form-group">
+                     <label for="YOHSCC"><b>Year of Completion</b></label>
+                     <input type="text" name="YOHSCC" id="YOHSCC" class="form-control" placeholder="Year of Completion">
+                    </div>
+                    <div class="col-xs-12 col-3 form-group">
+                     <label for="CGPA"><b>CGPA/Percentage</b></label>
+                     <input type="text" name="CGPA" id="CGPA" class="form-control" placeholder="CGPA"> 
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-xs-12 col-4 form-group">
+                      <label for="School"><b>Name Of College</b></label>
+                       <input type="text" name="NOC" id="NOC" class="form-control" placeholder="Name of College">
+                    </div>
+                    <div class="col-xs-12 col-4 form-group">
+                     <label for="YOHSCC"><b>Year of Graduation</b></label>
+                     <input type="text" name="YOG" id="YOG" class="form-control" placeholder="Year of Graduation">
+                    </div>
+                    <div class="col-xs-12 col-4 form-group">
+                     <label for="CGPA"><b>CPI/Percentage</b></label>
+                     <input type="text" name="CPI" id="CPI" class="form-control" placeholder="CPI"> 
+                    </div>
+                  </div>
+                  <input type="hidden" name="username" id="username" value="<%= user.name %>" >
+                  <!-- Uncomment For adding Image But Gives Error -->
+                  <!-- <div class="form-group">
+                    <label for="Image"><b>Upload Your Profile Picture Here: </b></label>
+                    <input type="file" name="Profile_pic" id="PP" placeholder="Upload">
+                  </div> -->
+                  <!-- Add more here -->
+                 <button type="submit" class="btn btn-dark">Submit Details</button> 
+                </form>    <!-- Form_End -->
+                <br>
+                <a class="btn btn-light btn-lg" href="/logout" role="button">Log Out</a>            
+              </div>
           </div>
-          <br>
-            <a class="btn btn-light btn-lg" href="/logout" role="button">Log Out</a>
         </div>
     </div>
 </div>
 
-<!-- Separate Plane Old Vanilla Js -->
+<!-- Separate_Plane_Old_Vanilla_Js -->
 <script>
 localStorage.clear();
   let  i = 0;
-  
+  //for Projects Section
   function func2(){
     i=i+1;
     localStorage.setItem("Number_of_Projects", i);
@@ -202,7 +273,7 @@ localStorage.clear();
     label1.innerHTML = "<b>Project Name</b>";
     label1.setAttribute("for", "name");
     const ProName = document.createElement("input");
-    const giver = "P" + i + "name";
+    const giver = "P0name";
     ProName.className = "form-control";
     ProName.id = giver;
     ProName.setAttribute("type", "text");
@@ -212,7 +283,7 @@ localStorage.clear();
     label2.innerHTML = "<b>Description of Project</b>";
     label2.setAttribute("for", "Pdesc");
     const DescName = document.createElement("textarea");
-    const giver1 = "P" + i + "desc";
+    const giver1 = "P0desc";
     DescName.className = "form-control";
     DescName.id = giver1;
     DescName.setAttribute("type", "text");
@@ -224,7 +295,7 @@ localStorage.clear();
     label3.innerHTML = "<b>Github Link / Live Link of Project</b>";
     label3.setAttribute("for", "Link");
     const Linker1 = document.createElement("input");
-    const giver2 = "Link" + i;
+    const giver2 = "Link0";
     Linker1.className = "form-control";
     Linker1.id = giver2;
     Linker1.setAttribute("type", "url");
@@ -254,6 +325,19 @@ function showCheckboxes() {
     expanded = false;
   }
 }
+//for Hobbies section
+let expanded1 = false;
+
+function showCheckboxes1() {
+  let checkboxes = document.getElementById("checkboxes1");
+  if (!expanded1) {
+    checkboxes.style.display = "block";
+    expanded1 = true;
+  } else {
+    checkboxes.style.display = "none";
+    expanded1 = false;
+  }
+}
 
   function func1(getter, give){
   let Box = document.getElementById(getter);
@@ -279,6 +363,32 @@ function showCheckboxes() {
   Putter.value = FilteredSkills;
 
   localStorage.setItem("skills", JSON.stringify(FilteredSkills));
+}
+//For Hobby Section
+function func3(getter, give){
+  let Box = document.getElementById(getter);
+  let CompareValue = Box.value;
+  skills = localStorage.getItem("Hobbies");
+  if(skills === null){
+    HobbyObj = [];
+  }else{
+    HobbyObj = JSON.parse(skills);
+  } 
+  if(CompareValue === give){
+    let x = HobbyObj.indexOf(give, 0);
+    delete HobbyObj[x];
+    Box.value="on";
+  }else{
+    Box.value = give;
+    HobbyObj.push(give);
+  }
+  let FilteredHobbies = HobbyObj.filter(function(element){
+    return element != null;
+  });
+  let Putter = document.getElementById("HobbyWala");
+  Putter.value = FilteredHobbies;
+
+  localStorage.setItem("Hobbies", JSON.stringify(FilteredHobbies));
 }
 </script>
 
