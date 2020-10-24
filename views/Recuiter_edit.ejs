@@ -1,6 +1,14 @@
 <%-  include('partials/header') %>
 <style>
-  .multiselect {
+body{
+  background-image: url("images/Back.jpg");
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100%;
+}
+.multiselect {
   width: 200px;
 }
 
@@ -23,7 +31,7 @@
 
 #checkboxes {
   display: none;
-  border: 1px #727171 solid;
+  border: 1px #5a5a5a7a solid;
   border-radius: 5px;
 }
 
@@ -32,11 +40,11 @@
 }
 
 #checkboxes label:hover {
-  background-color: #1e90ff;
+  background-color: #32fff5a8;
 }
 </style>
 <div class="alert alert-success alert-dismissible fade show" role="alert">
-    <strong>Congratulations! <%= user.name %> </strong> You have succesfully logged in succesfully!!
+    <strong>Congratulations! <%= user.name %> </strong> You have succesfully Registered in succesfully!!
     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
       <span aria-hidden="true">&times;</span>
     </button>
@@ -60,11 +68,11 @@
                   <div class="form-row">
                     <div class="col">
                       <label for="fname"><b>Recruiter Email Id</b></label>
-                      <input type="email" class="form-control" name="fname" placeholder="Recruiter Email">
+                      <input type="email" class="form-control" name="Rmail" placeholder="Recruiter Email">
                     </div>
                     <div class="col">
                       <label for="lname"><b>Offical Email Id of Company</b></label>
-                      <input type="email" class="form-control" name="lname" placeholder="Official Email of Company">
+                      <input type="email" class="form-control" name="Cmail" placeholder="Official Email of Company">
                     </div>
                   </div>
                 </div>
@@ -87,11 +95,11 @@
                  <div class="form-group">
                    <label for="HEXP"><b>Hiring Experience of Recruiter</b></label>
                    <select name="HEXP" id="HEXP" class="form-control">
-                     <option value="0">No Previous Experience</option>
-                     <option value="1">1+ Years</option>
-                     <option value="2">2+ Years</option>
-                     <option value="3">3+ Years</option>
-                     <option value="5">More Than 3 Years</option>
+                     <option>No Previous Experience</option>
+                     <option>1+ Years</option>
+                     <option>2+ Years</option>
+                     <option>3+ Years</option>
+                     <option>More Than 3 Years</option>
                    </select>
                  </div>
                  <!-- LEVEL FILLER -->
@@ -116,10 +124,7 @@
                       </div>
                     </div>
                 </div>
-                <!-- LEVEL FILLERS -->
-                <div class="form-group">
-                  <!-- ADD HERE -->
-                </div>
+                <input type="hidden" name="username" value="<%= user.name %>" id="userName">
                 <button type="submit" class="btn btn-dark">Submit Details</button>
                 </form>
                 <br>
