@@ -16,8 +16,8 @@ const findOrCreate = require("mongoose-findorcreate");    // google added
 let TempObj = {
   name: "",
   type: "",
-  googleId: "",
-}
+  googleId: ""
+};
 
 let status = "";
 let where = "";
@@ -40,7 +40,7 @@ mongoose.connect("mongodb://localhost:27017/userDB", {useUnifiedTopology: true ,
 mongoose.set("useCreateIndex" , true);
 
 
-//-------------------------------------------Image Matter ----------------------------------------------------------------------------------------------------->
+//-------------------------------------------Image_Matter----------------------------------------------------------------------------------------------------->
 // const imageSchema = new mongoose.Schema({ 
 //   name: String, 
 //   img: 
@@ -62,8 +62,7 @@ mongoose.set("useCreateIndex" , true);
 // }); 
 
 // let upload = multer({ storage: storage }); 
-//-------------------------------------------Image Ender----------------------------------------------------------------------------------------------------->
-
+//-------------------------------------------Image_Ender----------------------------------------------------------------------------------------------------->
 //-------------------------------------------Recruiter Matter----------------------------------------------------------------------------------------------------->
 const vacancySchema = new mongoose.Schema({
   Name: String,
@@ -77,8 +76,8 @@ const recruiterSchema = new mongoose.Schema({
 id: String,  
 Company: String,
 Recruiter_name: String,
-Recruiter_Pos: String,
 Recruiter_email: String,
+Recruiter_Pos: String,
 Company_email: String,
 Recruiter_Phno: String,
 Country: String,
@@ -90,9 +89,8 @@ Vacancy: [vacancySchema]
 
 recruiterSchema.plugin(passportLocalMongoose); //for Recruiter
 const Recruiter = mongoose.model("recruiter", recruiterSchema);
-//-------------------------------------------Recruiter ender ----------------------------------------------------------------------------------------------------->
-
-//-------------------------------------------Student Matter ----------------------------------------------------------------------------------------------------->
+//-------------------------------------------Recruiter_ender------------------------------------------------------------------------------------------------------>
+//-------------------------------------------Student_Matter------------------------------------------------------------------------------------------------------>
 const projectSchema = new mongoose.Schema({
   Name: String,
   Desc: String,
@@ -114,7 +112,6 @@ const collegeSchema = new mongoose.Schema({
 
 const studentSchema  = new mongoose.Schema({
 email: String,
-password: String,
 googleId: String,
 first_name: String,
 last_name: String,
@@ -126,7 +123,8 @@ School_info: schoolSchema,
 College_info: collegeSchema,
 projects: [projectSchema],
 Skills: [String],
-Hobbies: [String]
+Hobbies: [String],
+password: String
 // profilePic: imageSchema
 });
 
@@ -137,7 +135,7 @@ studentSchema.plugin(findOrCreate);  // google added
 const User = mongoose.model("User", studentSchema);
 const project = mongoose.model("project" , projectSchema);
 
-//------------------------------------------- Student Ender ----------------------------------------------------------------------------------------------------->
+//-------------------------------------------_Student_Ender_----------------------------------------------------------------------------------------------------->
 
 function StrategyCreator(Type){   //Strategy Created on the basis of Condition 
   if(Type === "STD"){
@@ -178,6 +176,7 @@ passport.use(new GoogleStrategy({
       if(err){
        console.log(err);
       }else{
+      //  console.log(Items.length);
        if(Items.length === 0){
         status = "New Registration";
         }else{
@@ -191,6 +190,24 @@ passport.use(new GoogleStrategy({
   }
 ));
 
+
+app.get("/student_loggedin",  function(req, res){
+  if(req.isAuthenticated()){
+   console.log(TempObj ,  where);
+   res.render("student_loggedin");
+  }else{
+   res.redirect("/login");
+  }
+});
+
+app.get("/recruiter_loggedin", function(req, res){
+  if(req.isAuthenticated()){
+   console.log(TempObj + " is logged in successfully");
+   res.render("recruiter_loggedin");
+  }else{
+    res.redirect("/login");
+  }
+});
 
 
 app.get("/", function(req, res){
@@ -206,13 +223,28 @@ app.get("/auth/google/secrets",
       // Sends to Edit Page if Not Already Registered                 /* it is authenticated by the google serves */
       if(status === "New Registration"){
         where = "FromGoogle";
-        res.render("Student_edit", {user: TempObj});
+        res.redirect("/student_edit");
       }else{
-        res.render("Student_login", {user: TempObj});
+        where = "FromGoogle";
+        res.redirect("/student_loggedin");
     }
 });
 
+app.get("/student_edit", function(req, res){
+  if(req.isAuthenticated()){
+res.render("student_edit", {user: TempObj});
+  }else{
+    res.redirect("/register");
+  }
+});
 
+app.get("/recruiter_edit", function(req, res){
+  if(req.isAuthenticated()){
+     res.render("recruiter_edit", {user: TempObj});
+  }else{
+      res.redirect("/register");
+  }
+});
 
 app.get("/login", function(req, res){
   res.render("login");
@@ -227,23 +259,31 @@ app.get("/logout" , function(req, res){
   res.redirect("/");
 });
 
-app.post("/Student_edit", function(req, res){
+app.post("/student_edit", function(req, res){
+  
   let Rec_Id  = req.body.Gid;
   let Rec_name = req.body.username;
   console.log(req.body);
   let x  = req.body.skillwala;
   let x1 = req.body.HobbyWala;
   let y = x.split(",");
+  console.log(y);
   let y1 = x1.split(",");
+  console.log(y1);
   let Project_names = req.body.P0name;
   let Project_desc = req.body.P0desc;
   let Project_Links = req.body.Link0;
   let Final_projects  = [];
+  if(typeof(Project_Links) === "string"){
+    let temp1 = {Name: Project_names, Desc: Project_desc, link: Project_Links};
+    Final_projects.push(temp1);
+  }else{
   let L = Project_Links.length;
   for(let i=0;i<L;i++){
     let temp = {Name: Project_names[i], Desc: Project_desc[i], link: Project_Links[i]};
     Final_projects.push(temp); 
   }
+}
   let School_Obj = {
    Name: req.body.NOS,
    YOS: req.body.YOHSCC,
@@ -255,23 +295,7 @@ app.post("/Student_edit", function(req, res){
    YOG: req.body.YOG,
    CPI: req.body.CPI
   };
-//------------------------------------image------------------------------------------------------------------------->
-// let obj = { 
-//     name: req.body.Profile_pic, 
-//     img: { 
-//         data: fs.readFileSync(path.join(__dirname + "/uploads/" + req.file.filename)), 
-//         contentType: 'image/png'
-//     } 
-// } 
-// Image.create(obj, (err, item) => { 
-//     if (err) { 
-//         console.log(err); 
-//     } 
-//     else { 
-//         console.log("Created Succesfully");
-//     } 
-// });
-//------------------------------------image------------------------------------------------------------------------->
+
   let Final_insertion = {
     first_name: req.body.fname,
     last_name: req.body.lname,
@@ -284,30 +308,35 @@ app.post("/Student_edit", function(req, res){
     projects: Final_projects,
     Skills: y,
     Hobbies: y1
-    // profilePic: obj
   };
+
   if(where === "FromGoogle"){
-    User.updateMany({googleId: Rec_Id}, {$set: Final_insertion}, function(err, res){
+    User.updateMany({googleId: Rec_Id}, {$set: Final_insertion}, function(err, result){
       if(err){
-        console.log(err + " At Google Student Route");
+        //console.log(err + " At Google Student Route");
+        res.send(err + " For Google Studdent Route!!");
       }else{
         where = "";
-        console.log("Updated Google Account SuccessFully"+ "Where=" + where);
+        res.redirect("/student_loggedin");
+        // console.log("Updated Google Account SuccessFully"+ "Where's value =  " + where);  
       }
     });
   }else{
-  User.updateMany({username: Rec_name}, {$set: Final_insertion}, function(err, res){
+  User.updateMany({username: Rec_name}, {$set: Final_insertion}, function(err, result){
     if (err){
-      console.log(err + " At the Student Route");
+     // console.log(err + " At the Student Route");
+      res.send(err + " For Normal Studdent Route!!");
     }else{
-      console.log("Updated SuccessFully");
+      console.log("Updated SuccessFully", result);
+      res.redirect("/student_loggedin");
+      // console.log("Updated SuccessFully", result);
     }
   });
 }
   
 });
 
-app.post("/Recruiter_edit", function(req, res){
+app.post("/recruiter_edit", function(req, res){
   let Rec_Name =  req.body.username;
   console.log(req.body);
   let x  = req.body.levels;
@@ -325,11 +354,12 @@ app.post("/Recruiter_edit", function(req, res){
   Experience:  req.body.HEXP,
   levels: y
   };
-  Recruiter.updateMany({username: Rec_Name}, {$set: Final_one}, function(err, res){
+  Recruiter.updateMany({username: Rec_Name}, {$set: Final_one}, function(err, result){
     if(err){
       console.log(err + " At the Recruiter Route");
     }else{
-      console.log("updated Successfully");
+      console.log("updated Successfully", result);
+      res.redirect("/recruiter_loggedin");
     }
   });
 
@@ -346,7 +376,7 @@ StrategyCreator(req.body.IDENTITY);
   }else{
     console.log(TempObj);
     passport.authenticate("local")(req, res, function(){
-      res.render("Student_edit", {user: TempObj});
+      res.redirect("/student_edit");
     });
   }
 });
@@ -362,7 +392,7 @@ app.post("/recruiter_register" , function(req, res){
       res.redirect("/register");
     }else{
       passport.authenticate("local")(req, res, function(){
-       res.render("Recruiter_edit", {user: TempObj});
+       res.redirect("/recruiter_edit");
       });
     }
   });
@@ -383,7 +413,7 @@ req.login(user, function(err){
     res.redirect("/login");
   }else{
     passport.authenticate("local")(req, res, function(){
-      res.render("Student_login" , {user: TempObj});
+      res.redirect("/student_loggedin");
     });
   }
 });
@@ -404,7 +434,7 @@ app.post("/recruiter_login", function(req, res){
       console.log(err);
     }else{
       passport.authenticate("local")(req, res, function(){
-        res.render("Recruiter_login", {user: TempObj});
+        res.redirect("/recruiter_loggedin");
       });
     }
   });
