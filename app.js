@@ -9,6 +9,7 @@ const passportLocalMongoose = require("passport-local-mongoose");
 const session = require("express-session");
 const GoogleStrategy = require('passport-google-oauth20').Strategy;  // google added
 const findOrCreate = require("mongoose-findorcreate");    // google added
+const { Strategy } = require("passport");
 // const fs = require("fs"); 
 // const path = require("path");      
 // const multer = require("multer");   
@@ -29,8 +30,8 @@ app.use(express.static("public"));
 
 app.use(session({
   secret: "ThisisaNewSecret",
-  resave: false,
-  saveUnitialized: false
+  resave: true,
+  saveUnitialized: true
 }));
 
 app.use(passport.initialize());
@@ -39,30 +40,6 @@ app.use(passport.session());
 mongoose.connect("mongodb://localhost:27017/userDB", {useUnifiedTopology: true , useNewUrlParser: true});
 mongoose.set("useCreateIndex" , true);
 
-
-//-------------------------------------------Image_Matter----------------------------------------------------------------------------------------------------->
-// const imageSchema = new mongoose.Schema({ 
-//   name: String, 
-//   img: 
-//   { 
-//       data: Buffer, 
-//       contentType: String 
-//   } 
-// }); 
-
-// const Image = new mongoose.model("Image", imageSchema);
-
-// let storage = multer.diskStorage({ 
-//   destination: (req, file, cb) => { 
-//       cb(null, "uploads") 
-//   }, 
-//   filename: (req, file, cb) => { 
-//       cb(null, file.fieldname + '-' + Date.now()) 
-//   } 
-// }); 
-
-// let upload = multer({ storage: storage }); 
-//-------------------------------------------Image_Ender----------------------------------------------------------------------------------------------------->
 //-------------------------------------------Recruiter Matter----------------------------------------------------------------------------------------------------->
 const vacancySchema = new mongoose.Schema({
   Name: String,
@@ -137,11 +114,11 @@ const project = mongoose.model("project" , projectSchema);
 
 //-------------------------------------------_Student_Ender_----------------------------------------------------------------------------------------------------->
 
-function StrategyCreator(Type){   //Strategy Created on the basis of Condition 
+function StrategyCreator(Type){                       //Strategy Created on the basis of Condition 
   if(Type === "STD"){
-    passport.use(User.createStrategy()); // Student
+    passport.use(User.createStrategy());              // Student
   }else{
-    passport.use(Recruiter.createStrategy()); //Recruiter
+    passport.use(Recruiter.createStrategy());          //Recruiter
   }
 }
 
@@ -190,8 +167,25 @@ passport.use(new GoogleStrategy({
   }
 ));
 
+app.get("/auth/google",                                           
+  passport.authenticate("google", { scope: ['profile'] }));        
+                                                                  
+app.get("/auth/google/secrets",
+    passport.authenticate("google", { failureRedirect: "/login" }),   
+    function(req, res) {                                              
+      // Sends to Edit Page if Not Already Registered                 
+      if(status === "New Registration"){
+        where = "FromGoogle";
+        res.render("student_edit", {user: TempObj});
+      }else{
+        where = "FromGoogle";
+        res.redirect("/student_loggedin");
+    }
+});
+
 
 app.get("/student_loggedin",  function(req, res){
+ /// StrategyCreator(TempObj.type);
   if(req.isAuthenticated()){
    console.log(TempObj ,  where);
    res.render("student_loggedin");
@@ -201,6 +195,7 @@ app.get("/student_loggedin",  function(req, res){
 });
 
 app.get("/recruiter_loggedin", function(req, res){
+ /// StrategyCreator(TempObj.type);
   if(req.isAuthenticated()){
    console.log(TempObj + " is logged in successfully");
    res.render("recruiter_loggedin");
@@ -213,54 +208,23 @@ app.get("/recruiter_loggedin", function(req, res){
 app.get("/", function(req, res){
   res.render("home");
 });
-
-app.get("/auth/google",                                           /* "/auth/google" is the First to be invoked path and it is basically a passport */ //google added
-  passport.authenticate("google", { scope: ['profile'] }));       /*  plugin for authenticating the user using   */ 
-                                                                  /* google strategy at the Lines : 61-74 and is  demanding for the profile containing all the info about the user */   
-app.get("/auth/google/secrets",
-    passport.authenticate("google", { failureRedirect: "/login" }),   //authenticate locally // google added
-    function(req, res) {                                              /* "/auth/google/secrets" is the Link where one is redirected by google  when  */
-      // Sends to Edit Page if Not Already Registered                 /* it is authenticated by the google serves */
-      if(status === "New Registration"){
-        where = "FromGoogle";
-        res.redirect("/student_edit");
-      }else{
-        where = "FromGoogle";
-        res.redirect("/student_loggedin");
-    }
-});
-
-app.get("/student_edit", function(req, res){
-  if(req.isAuthenticated()){
-res.render("student_edit", {user: TempObj});
-  }else{
-    res.redirect("/register");
-  }
-});
-
-app.get("/recruiter_edit", function(req, res){
-  if(req.isAuthenticated()){
-     res.render("recruiter_edit", {user: TempObj});
-  }else{
-      res.redirect("/register");
-  }
-});
-
+  
 app.get("/login", function(req, res){
   res.render("login");
 });
-
+  
 app.get("/register", function(req, res){
   res.render("register");
 });
-
+  
 app.get("/logout" , function(req, res){
+  console.log(req);
    req.logout();
   res.redirect("/");
 });
 
 app.post("/student_edit", function(req, res){
-  
+
   let Rec_Id  = req.body.Gid;
   let Rec_name = req.body.username;
   console.log(req.body);
@@ -314,7 +278,7 @@ app.post("/student_edit", function(req, res){
     User.updateMany({googleId: Rec_Id}, {$set: Final_insertion}, function(err, result){
       if(err){
         //console.log(err + " At Google Student Route");
-        res.send(err + " For Google Studdent Route!!");
+        res.send(err + " For Google Student Route!!");
       }else{
         where = "";
         res.redirect("/student_loggedin");
@@ -366,9 +330,9 @@ app.post("/recruiter_edit", function(req, res){
 });
 
 app.post("/student_register", function(req, res){
-
+  StrategyCreator(req.body.IDENTITY);
 TempObj.name = req.body.username;
-StrategyCreator(req.body.IDENTITY);
+TempObj.type = req.body.IDENTITY;
   User.register({username: req.body.username}, req.body.password , function(err , user){
   if(err){
     console.log(err + " at Student register route" );
@@ -376,7 +340,7 @@ StrategyCreator(req.body.IDENTITY);
   }else{
     console.log(TempObj);
     passport.authenticate("local")(req, res, function(){
-      res.redirect("/student_edit");
+      res.render("student_edit", {user: TempObj});
     });
   }
 });
@@ -384,15 +348,17 @@ StrategyCreator(req.body.IDENTITY);
 });
 
 app.post("/recruiter_register" , function(req, res){
-  TempObj.name = req.body.username;
   StrategyCreator(req.body.IDENTITY);
+  console.log(req.body.username);
+  TempObj.name = req.body.username;
+  TempObj.type = req.body.IDENTITY;
   Recruiter.register({username: req.body.username}, req.body.password, function(err, recruiter){
     if(err){
       console.log(err + " at Recruiter register Route");
       res.redirect("/register");
     }else{
       passport.authenticate("local")(req, res, function(){
-       res.redirect("/recruiter_edit");
+       res.render("recruiter_edit", {user: TempObj});
       });
     }
   });
