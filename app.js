@@ -9,7 +9,6 @@ const passportLocalMongoose = require("passport-local-mongoose");
 const session = require("express-session");
 const GoogleStrategy = require('passport-google-oauth20').Strategy;  // google added
 const findOrCreate = require("mongoose-findorcreate");    // google added
-const { Strategy } = require("passport");
 // const fs = require("fs"); 
 // const path = require("path");      
 // const multer = require("multer");   
@@ -30,8 +29,8 @@ app.use(express.static("public"));
 
 app.use(session({
   secret: "ThisisaNewSecret",
-  resave: true,
-  saveUnitialized: true
+  resave: false,
+  saveUnitialized: false
 }));
 
 app.use(passport.initialize());
@@ -50,7 +49,7 @@ const vacancySchema = new mongoose.Schema({
 });
 
 const recruiterSchema = new mongoose.Schema({
-id: String,  
+username: String,  
 Company: String,
 Recruiter_name: String,
 Recruiter_email: String,
@@ -88,7 +87,7 @@ const collegeSchema = new mongoose.Schema({
 });
 
 const studentSchema  = new mongoose.Schema({
-email: String,
+username: String,
 googleId: String,
 first_name: String,
 last_name: String,
@@ -114,11 +113,11 @@ const project = mongoose.model("project" , projectSchema);
 
 //-------------------------------------------_Student_Ender_----------------------------------------------------------------------------------------------------->
 
-function StrategyCreator(Type){                       //Strategy Created on the basis of Condition 
+function StrategyCreator(Type){                //Strategy Created on the basis of Condition 
   if(Type === "STD"){
-    passport.use(User.createStrategy());              // Student
+    passport.use(User.createStrategy());       // Student
   }else{
-    passport.use(Recruiter.createStrategy());          //Recruiter
+    passport.use(Recruiter.createStrategy());   //Recruiter
   }
 }
 
@@ -129,12 +128,15 @@ passport.serializeUser(function(user, done) {  //student // works for all the st
 });
 
 passport.deserializeUser(function(id, done) {  //Student // works for all the strategies // google added                                                                                         
+  if(TempObj.type === "STD"){
   User.findById(id, function(err, user) {   
   done(err, user);
   });
+}else{
   Recruiter.findById(id, function(err, user) {
   done(err, user);
   });
+}
 });
 
 
@@ -149,6 +151,7 @@ passport.use(new GoogleStrategy({
     // console.log(profile);
     TempObj.name = profile.displayName;
     TempObj.googleId = profile.id;
+    TempObj.type === "STD"
     User.find({googleId: profile.id}, function(err, Items){
       if(err){
        console.log(err);
@@ -185,7 +188,6 @@ app.get("/auth/google/secrets",
 
 
 app.get("/student_loggedin",  function(req, res){
- /// StrategyCreator(TempObj.type);
   if(req.isAuthenticated()){
    console.log(TempObj ,  where);
    res.render("student_loggedin");
@@ -195,7 +197,6 @@ app.get("/student_loggedin",  function(req, res){
 });
 
 app.get("/recruiter_loggedin", function(req, res){
- /// StrategyCreator(TempObj.type);
   if(req.isAuthenticated()){
    console.log(TempObj + " is logged in successfully");
    res.render("recruiter_loggedin");
@@ -224,7 +225,7 @@ app.get("/logout" , function(req, res){
 });
 
 app.post("/student_edit", function(req, res){
-
+  
   let Rec_Id  = req.body.Gid;
   let Rec_name = req.body.username;
   console.log(req.body);
@@ -275,10 +276,10 @@ app.post("/student_edit", function(req, res){
   };
 
   if(where === "FromGoogle"){
-    User.updateMany({googleId: Rec_Id}, {$set: Final_insertion}, function(err, result){
+  User.updateMany({googleId: Rec_Id}, {$set: Final_insertion}, function(err, result){
       if(err){
         //console.log(err + " At Google Student Route");
-        res.send(err + " For Google Student Route!!");
+        res.send(err + " For Google Studdent Route!!");
       }else{
         where = "";
         res.redirect("/student_loggedin");
@@ -330,7 +331,7 @@ app.post("/recruiter_edit", function(req, res){
 });
 
 app.post("/student_register", function(req, res){
-  StrategyCreator(req.body.IDENTITY);
+StrategyCreator(req.body.IDENTITY);
 TempObj.name = req.body.username;
 TempObj.type = req.body.IDENTITY;
   User.register({username: req.body.username}, req.body.password , function(err , user){
@@ -348,10 +349,10 @@ TempObj.type = req.body.IDENTITY;
 });
 
 app.post("/recruiter_register" , function(req, res){
-  StrategyCreator(req.body.IDENTITY);
-  console.log(req.body.username);
-  TempObj.name = req.body.username;
-  TempObj.type = req.body.IDENTITY;
+StrategyCreator(req.body.IDENTITY);
+console.log(req.body.username);
+TempObj.name = req.body.username;
+TempObj.type = req.body.IDENTITY;
   Recruiter.register({username: req.body.username}, req.body.password, function(err, recruiter){
     if(err){
       console.log(err + " at Recruiter register Route");
@@ -372,7 +373,7 @@ const user = new User({                // add More entries here
 });
 
 TempObj.name = req.body.username;
-
+TempObj.type = req.body.IDENTITY;
 req.login(user, function(err){
   if(err){
     console.log(err);
@@ -394,7 +395,7 @@ app.post("/recruiter_login", function(req, res){
   });
 
   TempObj.name = req.body.username;
-   
+  TempObj.type = req.body.IDENTITY;
   req.login(recruiter, function(err){
     if(err){
       console.log(err);
