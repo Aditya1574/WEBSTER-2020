@@ -1,5 +1,14 @@
 <%- include('partials/header') %>
-
+<style>
+body{
+background-image: url("images/Back2.jfif");
+background-position: center;
+background-attachment: fixed;
+background-repeat: no-repeat;
+background-size: cover;
+height: 100%;
+}
+</style>
 <div class="tab">
   <button class="tablinks" onclick="openCity(event, 'London')" id="defaultOpen"><b>Student Login</b></button>
   <button class="tablinks" onclick="openCity(event, 'Paris')"><b>Recruiter Login</b></button>
@@ -16,17 +25,17 @@
         <div class="card-body">
 
           <!-- Makes POST request to /login route -->
-          <form action="/login" method="POST">
+          <form action="/student_login" method="POST">
             <div class="form-group">
-              <label for="email"><b>Email</b></label>
-              <input type="email" class="form-control" name="username">
+              <label for="Email"><b>Email Address</b></label>
+              <input type="email" class="form-control" name="username" placeholder="Enter Your Personal Email Address">
             </div>
             <div class="form-group">
               <label for="password"><b>Password</b></label>
-              <input type="password" class="form-control" name="password">
+              <input type="password" class="form-control" name="password" placeholder="Password">
             </div>
             <button type="submit" class="btn btn-dark">Login</button>
-            <input type="hidden" name="INDENTITY" value="STDLOGIN">
+            <input type="hidden" name="IDENTITY" value="STD">
           </form>
 
         </div>
@@ -34,6 +43,7 @@
   
     </div>
 
+  
     <div class="col-sm-12" style="margin-top: 20px">
       <div class="card" style="width: 30%;">
         <div class="card-body btn-google">
@@ -60,17 +70,17 @@
           <div class="card-body">
   
             <!-- Makes POST request to /login route -->
-            <form action="/login" method="POST">
+            <form action="/recruiter_login" method="POST">
               <div class="form-group">
-                <label for="email"><b>Email</b></label>
-                <input type="email" class="form-control" name="username">
+                <label for="Email"><b>Email Address</b></label>
+                <input type="email" class="form-control" name="username" placeholder="Enter Your Personal Email Address">
               </div>
               <div class="form-group">
                 <label for="password"><b>Password</b></label>
-                <input type="password" class="form-control" name="password">
+                <input type="password" class="form-control" name="password" placeholder="Password">
               </div>
               <button type="submit" class="btn btn-dark">Login</button>
-              <input type="hidden"  name="INDENTITY" value="RGTLOGIN">
+              <input type="hidden"  name="IDENTITY" value="RCT">
             </form>
   
           </div>
@@ -80,7 +90,7 @@
  
     </div>
   </div>
-<!-- recruiter End -->
+<!--_recruiter_End_-->
 </div>
 
 <script>
