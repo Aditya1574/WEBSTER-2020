@@ -9,9 +9,7 @@ const passportLocalMongoose = require("passport-local-mongoose");
 const session = require("express-session");
 const GoogleStrategy = require('passport-google-oauth20').Strategy;  // google added
 const findOrCreate = require("mongoose-findorcreate");    // google added
-// const fs = require("fs"); 
-// const path = require("path");      
-// const multer = require("multer");   
+
 
 let TempObj = {
   name: "",
@@ -95,21 +93,20 @@ course: String,
 Specialization: String,
 course_type: String,
 Linkdn: String,
+Contact: String,
+UserInfo: String,
 School_info: schoolSchema,
 College_info: collegeSchema,
 projects: [projectSchema],
 Skills: [String],
 Hobbies: [String],
 password: String
-// profilePic: imageSchema
 });
 
 studentSchema.plugin(passportLocalMongoose); // for Student 
 studentSchema.plugin(findOrCreate);  // google added
-
-
 const User = mongoose.model("User", studentSchema);
-const project = mongoose.model("project" , projectSchema);
+
 
 //-------------------------------------------_Student_Ender_----------------------------------------------------------------------------------------------------->
 
@@ -156,7 +153,7 @@ passport.use(new GoogleStrategy({
       if(err){
        console.log(err);
       }else{
-      //  console.log(Items.length);
+        console.log(Items);
        if(Items.length === 0){
         status = "New Registration";
         }else{
@@ -178,9 +175,12 @@ app.get("/auth/google/secrets",
     function(req, res) {                                              
       // Sends to Edit Page if Not Already Registered                 
       if(status === "New Registration"){
+        console.log(req.isAuthenticated() + " @ New Registration");
         where = "FromGoogle";
         res.render("student_edit", {user: TempObj});
+        TempObj.googleId = "";
       }else{
+        console.log(req.isAuthenticated() + " @ old Registration");
         where = "FromGoogle";
         res.redirect("/student_loggedin");
     }
@@ -189,16 +189,51 @@ app.get("/auth/google/secrets",
 
 app.get("/student_loggedin",  function(req, res){
   if(req.isAuthenticated()){
-   console.log(TempObj ,  where);
-   res.render("student_loggedin");
-  }else{
+  //  console.log(TempObj ,  where);
+  if(where === "FromGoogle"){
+     //edit from here for the user from google
+  }else{ 
+  User.findOne({username: TempObj.name} , function(err, Items){
+    if(err){
+      res.send(err);
+    }else{
+      let FullName = Items.first_name + " " +  Items.last_name;
+      let Email = Items.username;
+      let SPEC = Items.Specialization;
+      let COURSE = Items.course;
+      let COURSE_TYPE = Items.course_type;
+      let HOBBIES = Items.Hobbies;
+      let COLLEGE_INFO = Items.College_info;
+      let SCHOOL_INFO = Items.School_info;
+      let PROJECTS = Items.projects;
+      let LINKDN  = Items.Linkdn; 
+      let CONTACT = Items.Contact;
+      let USERINFO = Items.UserInfo;
+      let SKILLS = Items.Skills;
+      let Final_Shot = {
+        FullName: FullName,
+        Email: Email,
+        Spec: SPEC, 
+        Course: COURSE,
+        Course_Type: COURSE_TYPE,
+        College_Info: COLLEGE_INFO,
+        School_Info: SCHOOL_INFO,
+        Linkdn: LINKDN,
+        Contact: CONTACT,
+        UserInfo: USERINFO
+      }
+      res.render("student_loggedin", {Final: Final_Shot, Skills: SKILLS, Hobbies: HOBBIES,  Projects: PROJECTS});
+    }
+  }); 
+  }
+  }else{ // if it is not authenticated
    res.redirect("/login");
   }
 });
 
 app.get("/recruiter_loggedin", function(req, res){
   if(req.isAuthenticated()){
-   console.log(TempObj + " is logged in successfully");
+  //  console.log(TempObj + " is logged in successfully");
    res.render("recruiter_loggedin");
   }else{
     res.redirect("/login");
@@ -228,6 +263,8 @@ app.post("/student_edit", function(req, res){
   
   let Rec_Id  = req.body.Gid;
   let Rec_name = req.body.username;
+  let Contact = req.body.contact;
+  let userinfo = req.body.userinfo;
   console.log(req.body);
   let x  = req.body.skillwala;
   let x1 = req.body.HobbyWala;
@@ -269,6 +306,8 @@ app.post("/student_edit", function(req, res){
     course_type: req.body.CT,
     Linkdn: req.body.LINKDN,
     School_info: School_Obj,
+    Contact: Contact,
+    UserInfo: userinfo,
     College_info: College_Obj,
     projects: Final_projects,
     Skills: y,
@@ -281,7 +320,7 @@ app.post("/student_edit", function(req, res){
         //console.log(err + " At Google Student Route");
         res.send(err + " For Google Studdent Route!!");
       }else{
-        where = "";
+        // where = "";
         res.redirect("/student_loggedin");
         // console.log("Updated Google Account SuccessFully"+ "Where's value =  " + where);  
       }
@@ -323,7 +362,7 @@ app.post("/recruiter_edit", function(req, res){
     if(err){
       console.log(err + " At the Recruiter Route");
     }else{
-      console.log("updated Successfully", result);
+      // console.log("updated Successfully", result);
       res.redirect("/recruiter_loggedin");
     }
   });
