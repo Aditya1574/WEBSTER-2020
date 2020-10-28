@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title></title>             <!--Title Name-->                              
+	<title><%= Final.FullName %></title>             <!--Title Name-->                              
 	
 	 <script src="https://kit.fontawesome.com/b99e675b6e.js"></script> <!-- Fontawesome-->
     <link rel="stylesheet" href="css/student.css" >                     <!--CSS LINK-->
@@ -11,31 +11,32 @@
 	<div class="wrapper">
 		<div class="resume">
 			<div class="left">
-				<div class="img_holder">
-					<img src="#">     <!--USER_PIC--><!--How_we_will_decide_User_pic_size-->
-				</div>
-				<div class="contact_wrap pb">
-					<div class="title">
+				<!-- uncomment for adding image -->
+				<!-- <div class="img_holder">
+					<img src="#">     
+				</div> -->
+				<div class="contact_wrap pb" style="padding-top: 30px">
+					<div class="title" > 
 						Contact
 					</div>
 					<div class="contact">
 						<ul>
 							<li>
 								<div class="li_wrap">
-									<div class="icon"><i class="fas fa-mobile-alt" aria-hidden="true"><a href="tel:"></a></i></div>
-									<div class="text">Phone Number</div>    <!--Phone Number-->
+									<div class="icon"><i class="fas fa-mobile-alt" aria-hidden="true" href="tel:<%= Final.Contact %>"></i></div>
+									<div class="text"><%= Final.Contact %></div>    <!--Phone Number-->
 								</div>
 							</li>
 							<li>
 								<div class="li_wrap">
-									<div class="icon"><i class="fas fa-envelope" aria-hidden="true"><a href="mailto: "></a></i></div>
-									<div class="text">Gmail.Account</div>             <!--Gmail acccount of user-->
+									<div class="icon"><i class="fas fa-envelope" aria-hidden="true" href="mailto:<%= Final.Email %>"></i></div>
+									<div class="text"><%= Final.Email %></div>             <!--Gmail acccount of user-->
 								</div>
 							</li>
 							<li>
 								<div class="li_wrap">
-									<div class="icon"><i class="fab fa-weebly" aria-hidden="true"><a href=""></a></i></div>
-									<div class="text">Linkedln Profile</div>              <!--Linkedln Profile-->
+									<div class="icon"><i class="fab fa-weebly" aria-hidden="true"  href="<%= Final.Linkdn %>"></i></div>
+									<div class="text"><%= Final.Linkdn %></div>              <!--Linkedln Profile-->
 								</div>
 							</li>
 						</ul>
@@ -50,11 +51,13 @@
 					<div class="skills">
 						<!-- Add Skills here -->
 						<ul>
+                        <% Skills.forEach(function(element){ %>
 							<li>
 								<div class="li_wrap">
-									<div class="text">SKILLL 1</div>
+									<div class="text"><b><%= element %></b></div>
 								</div>
 							</li>
+							<% }); %>
 						</ul>
 					</div>
 				</div>
@@ -68,11 +71,13 @@
 					</div>
 					<div class="hobbies">
 						<ul>
+							<% Hobbies.forEach(function(element){ %>
 							<li>
 								<div class="li_wrap">
-									<div class="text">Hobby1</div>
+									<div class="text"><b><%= element %></b></div>
 								</div>
 							</li>
+							<% }); %>
 						</ul>
 					</div>
 				</div>
@@ -82,14 +87,15 @@
 				<div class="header">
 					<div class="name_role">
 						<div class="name">
-							
+						<%=  Final.FullName  %>	
 						</div>
 						<div class="role">
-						College Name and Branch Names
+						<%= Final.College_Info.NOC %> <br>
+						<%= Final.Spec %>	
 						</div>
 					</div>
 					<div class="about">
-			        About User
+					    <%= Final.UserInfo %>
 					</div>
 				</div>
 				<div class="right_inner">
@@ -99,87 +105,72 @@
 						</div>
 						<div class="exp_wrap">
 							<ul>
-								<!-- Projects starts here  -->
+						<% Projects.forEach(function(element){ %>		
 								<li>
 									<div class="li_wrap">
 										<div class="date">
-											Project1
+										<%= element.Name %>	
 										</div>
 										<div class="info">
 											<p class="info_title">
-												Project 1 Name
+												<%= element.Name %>
 											</p>
 											<p class="info_com">
-												github link 
+												<%= element.link %> 
 												<!--how we add user git link-->
 											</p>
 											<p class="info_cont">
-												project info
+												<%= element.Desc %>
 											</p>
 										</div>
 									</div>
 								</li>
+								<% }); %>
 								<!-- Projects ends -->
 							</ul>
 						</div>
 					</div>
 					<div class="education">
 						<div class="title">
-							Education
+						Education
 						</div>
 						<div class="education_wrap">
+					
 							<ul>
 								<li>
 									<div class="li_wrap">
 										<div class="date">
-											Date
+										<%= Final.College_Info.YOG %>
 										</div>
 										<div class="info">
 											<p class="info_title">
-												Field
+										<%= Final.Course %>	
 											</p>
 											<p class="info_com">
-												University Name
+										<%= Final.Spec %>
 											</p>
 											<p class="info_cont">
-											info
+										<b>CPI: </b> <%= Final.College_Info.CPI %>
 											</p>
 										</div>
 									</div>
-								</li>
-								<li>
-									<div class="li_wrap">
-										<div class="date">
-											Date
-										</div>
-										<div class="info">
-											<p class="info_title"> courses done/Intern</p>
-												
-											
-											<p class="info_com">
-												Details or location
-											</p>
-											<p class="info_cont">
-												info
-											</p>
-										</div>
-									</div>
-								</li>
+								</li>						
 <!-- Schools -->
 								<li>
+										
 									<div class="li_wrap">
 										<div class="date">
-										Date
+										<%= Final.School_Info.YOS %>
 										</div>
 										<div class="info">
 											<p class="info_title">
 											Schooling
 											</p>
 											<p class="info_com">
-											School name
+										<%= Final.School_Info.Name %>	
 											</p>
 											<p class="info_cont">
-								            info
+								        <%= Final.School_Info.CGPA %> 
 											</p>
 										</div>
 									</div>
