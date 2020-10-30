@@ -240,9 +240,9 @@ app.get("/recruiter_loggedin", function(req, res){
   }
 });
 
-app.get("/student_page", function(req, res){
-  res.render("student_page");
-});
+// app.get("/student_page", function(req, res){
+//   res.render("student_page");
+// });
 app.get("/", function(req, res){
   res.render("home");
 });
@@ -421,7 +421,7 @@ req.login(user, function(err){
     res.redirect("/login");
   }else{
     passport.authenticate("local")(req, res, function(){
-       res.redirect("/student_page");
+       res.redirect("/student_loggedin");
     });
   }
 });
