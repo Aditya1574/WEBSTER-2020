@@ -33,37 +33,23 @@ app.use(session({
 
 app.use(passport.initialize());
 app.use(passport.session());
-
+mongoose.set("useFindAndModify", false);
 mongoose.connect("mongodb://localhost:27017/userDB", {useUnifiedTopology: true , useNewUrlParser: true});
 mongoose.set("useCreateIndex" , true);
 
-//-------------------------------------------Recruiter Matter----------------------------------------------------------------------------------------------------->
+
+//=======================================================Vacancy Starter===========================================================>
 const vacancySchema = new mongoose.Schema({
   Name: String,
   position: String,
   salary: String,
   Place: String,
-  type: String
+  MinCPI: String,
+  type: String,
+  Logo_link: String
 });
+//=======================================================Vacancy Ender==============================================================>
 
-const recruiterSchema = new mongoose.Schema({
-username: String,  
-Company: String,
-Recruiter_name: String,
-Recruiter_email: String,
-Recruiter_Pos: String,
-Company_email: String,
-Recruiter_Phno: String,
-Country: String,
-City: String,
-Experience: String,
-Level: String,
-Vacancy: [vacancySchema]
-});
-
-recruiterSchema.plugin(passportLocalMongoose); //for Recruiter
-const Recruiter = mongoose.model("recruiter", recruiterSchema);
-//-------------------------------------------Recruiter_ender------------------------------------------------------------------------------------------------------>
 //-------------------------------------------Student_Matter------------------------------------------------------------------------------------------------------>
 const projectSchema = new mongoose.Schema({
   Name: String,
@@ -100,6 +86,7 @@ College_info: collegeSchema,
 projects: [projectSchema],
 Skills: [String],
 Hobbies: [String],
+Applied_vacancy: [vacancySchema],
 password: String
 });
 
@@ -109,6 +96,28 @@ const User = mongoose.model("User", studentSchema);
 
 
 //-------------------------------------------_Student_Ender_----------------------------------------------------------------------------------------------------->
+//-------------------------------------------Recruiter Matter----------------------------------------------------------------------------------------------------->
+
+
+const recruiterSchema = new mongoose.Schema({
+username: String,  
+Company: String,
+Recruiter_name: String,
+Recruiter_email: String,
+Recruiter_Pos: String,
+Company_email: String,
+Recruiter_Phno: String,
+Country: String,
+City: String,
+Experience: String,
+Level: String,
+Vacancy: [vacancySchema],
+Applicants: [studentSchema]
+});
+
+recruiterSchema.plugin(passportLocalMongoose); //for Recruiter
+const Recruiter = mongoose.model("recruiter", recruiterSchema);
+//-------------------------------------------Recruiter_ender------------------------------------------------------------------------------------------------------>
 
 function StrategyCreator(Type){                //Strategy Created on the basis of Condition 
   if(Type === "STD"){
@@ -187,6 +196,7 @@ app.get("/auth/google/secrets",
 });
 
 
+
 app.get("/student_loggedin",  function(req, res){
   if(req.isAuthenticated()){
   //  console.log(TempObj ,  where);
@@ -240,9 +250,8 @@ app.get("/recruiter_loggedin", function(req, res){
   }
 });
 
-// app.get("/student_page", function(req, res){
-//   res.render("student_page");
-// });
+
+
 app.get("/", function(req, res){
   res.render("home");
 });
@@ -256,7 +265,7 @@ app.get("/register", function(req, res){
 });
   
 app.get("/logout" , function(req, res){
-  console.log(req);
+  // console.log(req);
    req.logout();
   res.redirect("/");
 });
@@ -447,10 +456,128 @@ app.post("/recruiter_login", function(req, res){
     }
   });
 });
+let k=0;
+
+app.post("/Vacancy_poster", function(req, res){
+  let postedVacancy = {
+    Name: req.body.TITLE,
+    position: req.body.ROLE,
+    salary: req.body.CURRENCY + req.body.Exp_Sal,
+    Place: req.body.COUNTRY + " ," + req.body.CITY,
+    MinCPI: req.body.CPI,
+    type: req.body.TYPE,
+    Logo_link: req.body.LINK
+  };
+  console.log(postedVacancy);
+ 
+   Recruiter.findOne({username: TempObj.name} , function(err, result){
+     if(err){
+       console.log(err+ " At post route");
+     }else{
+        console.log(result);
+        let pusher = result.Vacancy;
+        pusher.push(postedVacancy);
+        Recruiter.updateOne({username: TempObj.name}, { $set: { Vacancy: pusher } }, function(error, Result){
+          if(err){
+            console.log(err);
+          }else{
+            res.redirect("/Vacancy_poster");
+          }
+        });  
+     }
+   });
+  
+});
+
+app.get("/Vacancy_poster", function(req, res){
+
+  Recruiter.findOne({username: TempObj.name} , function(err, found_Rec){
+    if(err){
+      console.log(err + " at get route");
+    }else{
+      console.log(found_Rec);
+      res.render("Vacancy_poster", {ADDS: found_Rec.Vacancy});
+    }
+  });
+});
+
+app.get("/Student_vacancy", function(req, res){
+  User.findOne({username: TempObj.name}, function(err, student){
+    if(err){
+      console.log(err);
+    }else{
+      // console.log(student);
+      Recruiter.find({Vacancy: { $ne: null } }, function(err, available_rec){
+        if(err){
+          console.log(err);
+        }else{
+          // console.log(available_rec[0].Vacancy);
+          let x = [];
+          available_rec.forEach(function(element){
+          element.Vacancy.forEach(function(ele){
+           x.push(ele);
+          });
+          });
+          // console.log(x);
+          // console.log(student);
+          let student_CPI = student.College_info.CPI;
+          let Final_rec = x.filter(function(element){
+            return (element.MinCPI <= student_CPI);
+          });
+          res.render("Student_vacancy", {pushed: Final_rec, applied: student.Applied_vacancy});
+        }
+      });
+      // of Student 
+    }
+  });
+});
+
+app.get("/applyRoute/:id", function(req, res){
+   let finder = req.params.id;
+   Recruiter.findOne({Vacancy: { $elemMatch: { _id: { $eq: finder } } } }, function(err, result){
+     if(err){
+       console.log(err);
+     }else{
+      //console.log("Recruiter out of User result= = " +  result);
+      User.findOne({username: TempObj.name}, function(error, found){
+        if(err){
+          console.log(error);
+        }else{
+          let pusher = result.Vacancy;
+          let getter = pusher.filter(function(element){
+            return (element._id = finder);
+          });
+          console.log(typeof(result.Vacancy), pusher, getter);
+          User.updateOne({username: TempObj.name}, { $push: { Applied_vacancy: getter[0] } }, function(error, Result){
+            if(error){
+              console.log(error);
+            }else{
+              Recruiter.updateOne({username: result.username}, {$push: {Applicants: found}}, function(Error, RES){
+                if(Error){
+                  console.log(Error);
+                }else{
+                  res.redirect("/Student_vacancy");
+                }
+              });
+            }
+          }); 
+        }
+      }); 
+     }
+   });
+});
+
+app.get("/deleteRoute/:id" , function(req, res){
+  let finder = req.params.id;                          //pull    //from     //thisThing
+  Recruiter.findOneAndUpdate({username: TempObj.name}, { $pull: { Vacancy: {_id: finder} } }, function(err, result){
+    if(err){
+      console.log(err);
+    }else{
+      res.redirect("/Vacancy_poster");
+    }
+  });
+});
 
 app.listen(3000, function(){
   console.log("The server is Running Properly at Port 3000");
 });
-
-
-
