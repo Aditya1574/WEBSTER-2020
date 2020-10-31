@@ -1,10 +1,49 @@
 <%- include('partials/header') %>
 
+<style>
+  html{
+ overflow-x: hidden;
+}
+#ram {
+ position: absolute;
+ right: 75px;
+}
+#abd{
+ position: absolute;
+ right: 170px;
+ top: 2px;
+}
+</style>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="#"><b>Hello , Dear Recruiter %></b></a>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
+      aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav form-inline my-2 my-lg-0">
+          <li class="nav-item dropdown" id="ram">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
+                  aria-haspopup="true" aria-expanded="false">
+               <i class="fa fa-bars" aria-hidden="true"></i>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                  <a class="dropdown-item" href="/Vacancy_poster">Post Vacancy</a>
+                  <a class="dropdown-item" href="/logout">Logout</a>
+              </div>
+          </li>
+      </ul>
+  </div>
+</nav>
+
 <div class="alert alert-success alert-dismissible fade show" role="alert">
-    <strong>Welcome to the Login Page ! <%= user.name %> </strong> 
+    <strong>Welcome to the Login Page ! </strong> 
     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
       <span aria-hidden="true">&times;</span>
     </button>
 </div>
+
+
 
 <%- include('partials/footer') %>
