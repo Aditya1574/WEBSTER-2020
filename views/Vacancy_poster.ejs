@@ -1,0 +1,113 @@
+<%- include('partials/header') %>
+
+<div class="container my-5" > 
+    <div class="row">
+        <div class="col-sm-12">
+          <div class="card">
+            <div class="card-body">
+               <form action="/Vacancy_poster" method="post">
+                <div class="form-group">
+                    <label for="Title"><b>Title of Job</b></label>
+                    <input type="text" name="TITLE" id="TITLE" class="form-control" placeholder="Title">
+                </div>
+                <div class="form-group">
+                    <label for="Role"><b>Role of Employee</b></label>
+                    <input type="text" name="ROLE" id="ROLE" class="form-control" placeholder="Role of Employee">
+                </div>
+                <div class="form-group">
+                    <label for="currency"><b>Currency</b></label>
+                    <select name="CURRENCY" id="CURRENCY">
+                    <option value="€">Euro</option>
+                    <option value="£">Pounds</option>
+                    <option value="₽">Russian ruble</option>
+                    <option value="R$">Brazillian ruble</option>
+                    <option value="₹">Indian Rupee</option>
+                    </select>
+                    <label for="Exp_Sal"><b>Expected Salary</b>(*On Per-month Basis)</label>
+                    <select name="Exp_Sal" id="Exp_sal" class="form-control">
+                    <option>Below 10,000</option>
+                    <option>10,000-20,000</option>
+                    <option>20,000-40,000</option>
+                    <option>40,000-60,000</option>
+                    <option>60,000-80,000</option>
+                    <option>80,000-100,000</option>
+                    <option>Above 100,000</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="Place"><b>Name of Country</b></label>
+                    <input type="text" name="COUNTRY" id="COUNTRY" class="form-control" placeholder="Name of Country">
+                    <label for="City"><b>Name of City</b></label>
+                    <input type="text" name="CITY" id="CITY" class="form-control" placeholder="Name of City">
+                </div>
+                <div class="form-group">
+                    <label for="Type"><b>Type of Job</b></label>
+                    <select name="TYPE" id="TYPE" class="form-control">
+                        <option>Part-Time</option>
+                        <option>Full-Time</option>
+                        <option>Dynamic: Will be based upon the Performance</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="Link"><b>Link for Company's Logo</b></label>
+                    <input type="text" name="LINK" id="LINK" class="form-control" placeholder="Link for Company's Logo">
+                </div>
+                <div class="form-group">
+                    <label for="CPI"><b>Qualifying CPI for the Student</b></label>
+                    <input type="text" name="CPI" id="CPI" class="form-control" placeholder="Qualifying CPI">
+                </div>
+                <button type="submit" class="btn btn-dark">Post Vacancy</button> 
+               </form>
+            </div>
+          </div>
+        </div>
+    </div>
+</div>
+<hr>
+<div id="root">
+    <div class="row my-5" style="margin-left: auto;">
+      <!-- add ejs code here -->
+      <% ADDS.forEach(function(element){ %>
+        <div class="col-xs-4">
+            
+            <div class="card" style="width: 25rem;">
+                <img src="<%= element.Logo_link %>" class="card-img-top" >
+                <div class="card-body">
+                  <h5 class="card-title"><b> <%= element.Name %> </b></h5>
+                  <p class="card-text">
+                    <%= element.position %>
+                  </p>
+                  <p class="card-text">
+                    <b>Expected Range of Salary: </b>  <%= element.salary %>   
+                  </p>
+                  <p class="card-text">
+                   <b>Minimum Qualifying CPI for Student: </b> <%= element.MinCPI %>
+                  </p>
+                  <p class="card-text">
+                     <%= element.Place %> 
+                  </p>
+                  <p class="card-text">
+                    <%= element.type %>  
+                  </p>
+                  <a href="/deleteRoute/<%= element._id %>" class="btn btn-primary"> Delete Post</a>
+                </div>
+              </div>
+        </div>
+        <% }); %>
+    </div>
+</div>
+
+<script>
+    function func1(){
+        if(ADDS.length === 0 || ADDS === null){
+            document.getElementById("root").innerHTML = "<h3><b>You Haven't Posted any Vacanies yet </b></h3>";
+        }
+    }
+    window.onload = function(){
+        func1();
+    }
+</script>
+                
+
+
+<%- include('partials/footer') %>
