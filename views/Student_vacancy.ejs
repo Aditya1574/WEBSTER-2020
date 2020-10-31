@@ -1,0 +1,97 @@
+<%- include('partials/header') %>
+<style>
+    .card{
+        margin-bottom: 10px;
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+</style>
+
+<div class="tab">
+    <button class="tablinks" onclick="openCity(event, 'London')" id="defaultOpen"><b>Available Vacancies</b></button>
+    <button class="tablinks" onclick="openCity(event, 'Paris')"><b>Applied For</b></button>
+  </div>
+
+
+<div id="London" class="tabcontent">
+<!-- Available -->
+  <div class="row my-5" style="margin-left: auto;">
+    <!-- add ejs code here -->
+    <% pushed.forEach(function(element){ %>
+    <div class="col-xs-4">
+        
+        <div class="card" style="width: 18rem;">
+            <img src="<%= element.Logo_link %>" class="card-img-top" alt="...">
+            <div class="card-body">
+              <h5 class="card-title"><b> <%= element.Name %>  </b></h5>
+              <p class="card-text">
+               <%= element.Role %>
+              </p>
+              <p class="card-text">
+               <b>Salary Offered:</b> <%= element.salary %>
+              </p>
+              <p class="card-text">
+                <%= element.Place %>
+              </p>
+              <p class="card-text">
+                <%= element.type %>
+              </p>
+              <a href="/applyRoute/<%= element._id %>" class="btn btn-primary">Apply</a>
+            </div>
+          </div>
+         
+      </div>
+      <% }); %>
+  </div>
+</div>
+
+<div id="Paris" class="tabcontent">
+    <!-- Appplied_for -->
+    <div class="row my-5" style="margin-left: auto;">
+      <!-- add ejs code here -->
+      <% applied.forEach(function(element){ %>
+        <div class="col-xs-4">
+            
+            <div class="card" style="width: 18rem;">
+                <img src="<%= element.Logo_link %>" class="card-img-top" alt="...">
+                <div class="card-body">
+                  <h5 class="card-title"><b> <%= element.Name %> </b></h5>
+                  <p class="card-text">
+                    <%= element.Role %> 
+                  </p>
+                  <p class="card-text">
+                    <b>Salary Offered:</b> <%= element.salary %>
+                  </p>
+                  <p class="card-text">
+                    <%= element.Place %>
+                  </p>
+                  <p class="card-text">
+                    <%= element.type %>
+                  </p>
+                </div>
+              </div>
+              
+        </div>
+        <% }); %>
+    </div>
+    
+</div>
+
+<script>
+    function openCity(evt, cityName) { 
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(cityName).style.display = "block";
+    evt.currentTarget.className += " active";
+  }
+  document.getElementById("defaultOpen").click();
+  </script>.
+
+<%- include('partials/footer') %>
