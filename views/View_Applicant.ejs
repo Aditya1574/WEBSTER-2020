@@ -1,0 +1,39 @@
+<%- include('partials/header') %>
+<style>
+    .card{
+        margin-bottom: 10px;
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+</style>
+
+<center>
+    <h2 class="my-5">Aspiring Applicants for the Vacancy</h2>
+</center>
+
+
+<div class="row" style="margin-left: auto;">
+  <% applicants.forEach(function(element){ %>
+  <div class="col-sm-6">
+    <div class="card mb-3" style="max-width: 540px;">
+      <div class="row no-gutters" style="margin-left: auto;">
+        <div class="col-md-4">
+          <img src="<%= element.Avatar_link %>" class="card-img" >
+        </div>
+        <div class="col-md-8">
+          <div class="card-body">
+            <h5 class="card-title"><%= element.first_name %> <%= element.last_name %> </h5>
+            <p class="card-text"><%= element.College_info.NOC %></p>
+            <p class="card-text"><%= element.Specialization %></p>
+            <br>
+            <a href="/viewProfile/<%= element._id %>" class="btn btn-primary">View Profile</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% }); %> 
+</div>
+
+
+<%- include('partials/footer') %>
