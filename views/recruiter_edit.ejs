@@ -67,7 +67,7 @@ body{
                  <div class="form-group">
                   <div class="form-row">
                     <div class="col">
-                      <label for="fname"><b>Recruiter Email Id</b></label>
+                      <label for="fname"><b>Recruiter's Company Email Id</b></label>
                       <input type="email" class="form-control" name="Rmail" placeholder="Recruiter Email">
                     </div>
                     <div class="col">
@@ -124,7 +124,12 @@ body{
                       </div>
                     </div>
                 </div>
+                <div class="form-group">
+                  <label for="avatar"><b>Your Company's Logo Link</b></label>
+                  <input type="text" name="AVATAR" id="AVATAR" class="form-control" placeholder="Your Avatar Link">
+                </div>
                 <input type="hidden" name="username" value="<%= user.name %>" id="userName">
+                
                 <button type="submit" class="btn btn-dark">Submit Details</button>
                 </form>
                 <br>
