@@ -1,5 +1,13 @@
 <%- include('partials/header') %>
 
+<style>
+    .card{
+        margin-bottom: 10px;
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+</style>
+
 <div class="container my-5" > 
     <div class="row">
         <div class="col-sm-12">
@@ -70,7 +78,7 @@
       <% ADDS.forEach(function(element){ %>
         <div class="col-xs-4">
             
-            <div class="card" style="width: 25rem;">
+            <div class="card" style="width: 22rem;">
                 <img src="<%= element.Logo_link %>" class="card-img-top" >
                 <div class="card-body">
                   <h5 class="card-title"><b> <%= element.Name %> </b></h5>
@@ -89,7 +97,8 @@
                   <p class="card-text">
                     <%= element.type %>  
                   </p>
-                  <a href="/deleteRoute/<%= element._id %>" class="btn btn-primary"> Delete Post</a>
+                  <a href="/deleteRoute/<%= element._id %>" class="btn btn-outline-warning"> <i class="fas fa-trash"></i> Delete Post</a>
+                  <a href="/applicantRoute/<%= element._id %>" class="btn btn-outline-success"> <i class="fas fa-user-tie"></i> View Applicants</a>
                 </div>
               </div>
         </div>
@@ -97,16 +106,7 @@
     </div>
 </div>
 
-<script>
-    function func1(){
-        if(ADDS.length === 0 || ADDS === null){
-            document.getElementById("root").innerHTML = "<h3><b>You Haven't Posted any Vacanies yet </b></h3>";
-        }
-    }
-    window.onload = function(){
-        func1();
-    }
-</script>
+
                 
 
 
