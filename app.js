@@ -87,6 +87,7 @@ projects: [projectSchema],
 Skills: [String],
 Hobbies: [String],
 Applied_vacancy: [vacancySchema],
+Avatar_link: String,
 password: String
 });
 
@@ -100,7 +101,7 @@ const User = mongoose.model("User", studentSchema);
 
 
 const recruiterSchema = new mongoose.Schema({
-username: String,  
+username: String, 
 Company: String,
 Recruiter_name: String,
 Recruiter_email: String,
@@ -112,7 +113,9 @@ City: String,
 Experience: String,
 Level: String,
 Vacancy: [vacancySchema],
-Applicants: [studentSchema]
+Applicants: [studentSchema],
+Avatar_link: String,
+password: String
 });
 
 recruiterSchema.plugin(passportLocalMongoose); //for Recruiter
@@ -157,7 +160,7 @@ passport.use(new GoogleStrategy({
     // console.log(profile);
     TempObj.name = profile.displayName;
     TempObj.googleId = profile.id;
-    TempObj.type === "STD"
+    TempObj.type = "STD"
     User.find({googleId: profile.id}, function(err, Items){
       if(err){
        console.log(err);
@@ -184,12 +187,12 @@ app.get("/auth/google/secrets",
     function(req, res) {                                              
       // Sends to Edit Page if Not Already Registered                 
       if(status === "New Registration"){
-        console.log(req.isAuthenticated() + " @ New Registration");
+        // console.log(req.isAuthenticated() + " @ New Registration");
         where = "FromGoogle";
         res.render("student_edit", {user: TempObj});
         TempObj.googleId = "";
       }else{
-        console.log(req.isAuthenticated() + " @ old Registration");
+        // console.log(req.isAuthenticated() + " @ old Registration");
         where = "FromGoogle";
         res.redirect("/student_loggedin");
     }
@@ -220,6 +223,7 @@ app.get("/student_loggedin",  function(req, res){
       let CONTACT = Items.Contact;
       let USERINFO = Items.UserInfo;
       let SKILLS = Items.Skills;
+      let AVA_LINK= Items.Avatar_link;
       let Final_Shot = {
         FullName: FullName,
         Email: Email,
@@ -230,7 +234,8 @@ app.get("/student_loggedin",  function(req, res){
         School_Info: SCHOOL_INFO,
         Linkdn: LINKDN,
         Contact: CONTACT,
-        UserInfo: USERINFO
+        UserInfo: USERINFO,
+        Link: AVA_LINK
       }
       res.render("student_loggedin", {Final: Final_Shot, Skills: SKILLS, Hobbies: HOBBIES,  Projects: PROJECTS});
     }
@@ -271,18 +276,18 @@ app.get("/logout" , function(req, res){
 });
 
 app.post("/student_edit", function(req, res){
-  
+  let ava_link  = req.body.AVATAR;
   let Rec_Id  = req.body.Gid;
   let Rec_name = req.body.username;
   let Contact = req.body.contact;
   let userinfo = req.body.userinfo;
-  console.log(req.body);
+  // console.log(req.body);
   let x  = req.body.skillwala;
   let x1 = req.body.HobbyWala;
-  let y = x.split(",");
-  console.log(y);
+  let y = x.split(",");  
+  //console.log(y);
   let y1 = x1.split(",");
-  console.log(y1);
+  //console.log(y1);
   let Project_names = req.body.P0name;
   let Project_desc = req.body.P0desc;
   let Project_Links = req.body.Link0;
@@ -322,7 +327,8 @@ app.post("/student_edit", function(req, res){
     College_info: College_Obj,
     projects: Final_projects,
     Skills: y,
-    Hobbies: y1
+    Hobbies: y1,
+    Avatar_link: ava_link
   };
 
   if(where === "FromGoogle"){
@@ -339,10 +345,10 @@ app.post("/student_edit", function(req, res){
   }else{
   User.updateMany({username: Rec_name}, {$set: Final_insertion}, function(err, result){
     if (err){
-     // console.log(err + " At the Student Route");
+     console.log(err + " At the Student Route");
       res.send(err + " For Normal Studdent Route!!");
     }else{
-      console.log("Updated SuccessFully", result);
+     // console.log("Updated SuccessFully", result);
       res.redirect("/student_loggedin");
       // console.log("Updated SuccessFully", result);
     }
@@ -353,10 +359,10 @@ app.post("/student_edit", function(req, res){
 
 app.post("/recruiter_edit", function(req, res){
   let Rec_Name =  req.body.username;
-  console.log(req.body);
+  //console.log(req.body);
   let x  = req.body.levels;
   let y = x.split(",");
-  console.log(y);
+  //console.log(y);
   let Final_one = {
   Company: req.body.CNAME,
   Recruiter_name: req.body.RNAME,
@@ -367,7 +373,8 @@ app.post("/recruiter_edit", function(req, res){
   Country: req.body.CoNAME,
   City: req.body.CiNAME,
   Experience:  req.body.HEXP,
-  levels: y
+  levels: y,
+  Avatar_link: req.body.AVATAR
   };
   Recruiter.updateMany({username: Rec_Name}, {$set: Final_one}, function(err, result){
     if(err){
@@ -389,7 +396,7 @@ TempObj.type = req.body.IDENTITY;
     console.log(err + " at Student register route" );
     res.redirect("/register");
   }else{
-    console.log(TempObj);
+    //console.log(TempObj);
     passport.authenticate("local")(req, res, function(){
       res.render("student_edit", {user: TempObj});
     });
@@ -400,7 +407,7 @@ TempObj.type = req.body.IDENTITY;
 
 app.post("/recruiter_register" , function(req, res){
 StrategyCreator(req.body.IDENTITY);
-console.log(req.body.username);
+//console.log(req.body.username);
 TempObj.name = req.body.username;
 TempObj.type = req.body.IDENTITY;
   Recruiter.register({username: req.body.username}, req.body.password, function(err, recruiter){
@@ -474,7 +481,7 @@ app.post("/Vacancy_poster", function(req, res){
      if(err){
        console.log(err+ " At post route");
      }else{
-        console.log(result);
+        //console.log(result);
         let pusher = result.Vacancy;
         pusher.push(postedVacancy);
         Recruiter.updateOne({username: TempObj.name}, { $set: { Vacancy: pusher } }, function(error, Result){
@@ -495,7 +502,7 @@ app.get("/Vacancy_poster", function(req, res){
     if(err){
       console.log(err + " at get route");
     }else{
-      console.log(found_Rec);
+      //console.log(found_Rec);
       res.render("Vacancy_poster", {ADDS: found_Rec.Vacancy});
     }
   });
@@ -524,6 +531,7 @@ app.get("/Student_vacancy", function(req, res){
           let Final_rec = x.filter(function(element){
             return (element.MinCPI <= student_CPI);
           });
+          //console.log(student.Applied_vacancy)
           res.render("Student_vacancy", {pushed: Final_rec, applied: student.Applied_vacancy});
         }
       });
@@ -534,21 +542,24 @@ app.get("/Student_vacancy", function(req, res){
 
 app.get("/applyRoute/:id", function(req, res){
    let finder = req.params.id;
+   //console.log(finder)
    Recruiter.findOne({Vacancy: { $elemMatch: { _id: { $eq: finder } } } }, function(err, result){
      if(err){
        console.log(err);
      }else{
       //console.log("Recruiter out of User result= = " +  result);
       User.findOne({username: TempObj.name}, function(error, found){
-        if(err){
+        if(error){
           console.log(error);
         }else{
           let pusher = result.Vacancy;
-          let getter = pusher.filter(function(element){
-            return (element._id = finder);
-          });
-          console.log(typeof(result.Vacancy), pusher, getter);
-          User.updateOne({username: TempObj.name}, { $push: { Applied_vacancy: getter[0] } }, function(error, Result){
+          let getter = {};
+          for(let i=0; i<pusher.length;i++){ 
+            if(pusher[i]._id == finder){
+              getter = pusher[i];
+            }
+          }
+          User.updateOne({username: TempObj.name}, { $push: { Applied_vacancy: getter } }, function(error, Result){
             if(error){
               console.log(error);
             }else{
@@ -575,6 +586,57 @@ app.get("/deleteRoute/:id" , function(req, res){
     }else{
       res.redirect("/Vacancy_poster");
     }
+  });
+});
+
+app.get("/applicantRoute/:id", function(req, res){
+let finder = req.params.id;
+User.find({Applied_vacancy: { $elemMatch: { _id: { $eq: finder }  } } }, function(err, found){
+  if(err){
+    console.log(err);
+    res.send("<h1><center>Sorry! Unfortunately the App Crashed!</center></h1>")
+  }else{
+     res.render("View_Applicant", {applicants: found});
+  }
+});
+
+});
+
+app.get("/viewProfile/:id", function(req, res){
+  let finder = req.params.id;
+  User.findOne({_id: finder}, function(err, found){
+   if(err){
+     console.log(err);
+   }else{
+    let FullName = found.first_name + " " +  found.last_name;
+    let Email = found.username;
+    let SPEC = found.Specialization;
+    let COURSE = found.course;
+    let COURSE_TYPE = found.course_type;
+    let HOBBIES = found.Hobbies;
+    let COLLEGE_INFO = found.College_info;
+    let SCHOOL_INFO = found.School_info;
+    let PROJECTS = found.projects;
+    let LINKDN  = found.Linkdn; 
+    let CONTACT = found.Contact;
+    let USERINFO = found.UserInfo;
+    let SKILLS = found.Skills;
+    let AVA_LINK = found.Avatar_link;
+    let Final_Shot = {
+      FullName: FullName,
+      Email: Email,
+      Spec: SPEC, 
+      Course: COURSE,
+      Course_Type: COURSE_TYPE,
+      College_Info: COLLEGE_INFO,
+      School_Info: SCHOOL_INFO,
+      Linkdn: LINKDN,
+      Contact: CONTACT,
+      UserInfo: USERINFO,
+      Link: AVA_LINK
+    }
+    res.render("Applicant", {Final: Final_Shot, Skills: SKILLS, Hobbies: HOBBIES,  Projects: PROJECTS});
+   }
   });
 });
 
