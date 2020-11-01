@@ -53,6 +53,7 @@ height: 100%;
   background-color: #32fff5a8;
 }
 
+
 #checkboxes label {
   display: block;
 }
@@ -89,6 +90,14 @@ height: 100%;
                       <input type="text" class="form-control" name="lname" placeholder="Last name">
                     </div>
                   </div>
+                </div>
+                <div class="form-group">
+                  <label for="userinfo"><b>Information about the User</b></label>
+                  <textarea class="form-control" name="userinfo" id="userinfo" cols="30" rows="3" placeholder="Information about  the user"></textarea>
+                </div>
+                <div class="form-group">
+                  <label for="Contact"><b>Contact Number with Country Code</b></label>
+                  <input type="text" name="contact" id="contact" class="form-control" placeholder="Contact Number">
                 </div>
                 <div class="form-group">
                   <label for="course"><b>Course</b></label>
@@ -247,8 +256,13 @@ height: 100%;
                      <input type="text" name="CPI" id="CPI" class="form-control" placeholder="CPI"> 
                     </div>
                   </div>
+                  <div class="form-group">
+                    <label for="avatar"><b>Your Avatar Link</b></label>
+                    <input type="text" name="AVATAR" id="AVATAR" class="form-control" placeholder="Your Avatar Link">
+                  </div>
                   <input type="hidden" name="username" id="username" value="<%= user.name %>" >
                   <input type="hidden" name="Gid" id="Gid" value="<%= user.googleId %>">
+                  
                   <!-- Uncomment For adding Image But Gives Error -->
                   <!-- <div class="form-group">
                     <label for="Image"><b>Upload Your Profile Picture Here: </b></label>
