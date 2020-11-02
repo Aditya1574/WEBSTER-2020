@@ -165,7 +165,7 @@ passport.use(new GoogleStrategy({
       if(err){
        console.log(err);
       }else{
-        console.log(Items);
+        // console.log(Items);
        if(Items.length === 0){
         status = "New Registration";
         }else{
@@ -202,9 +202,41 @@ app.get("/auth/google/secrets",
 
 app.get("/student_loggedin",  function(req, res){
   if(req.isAuthenticated()){
-  //  console.log(TempObj ,  where);
   if(where === "FromGoogle"){
-     //edit from here for the user from google
+     User.findOne({googleId: TempObj.googleId}, function(err, Items){
+       if(err){
+         console.log(err);
+       }else{
+        let FullName = Items.first_name + " " +  Items.last_name;
+        let Email = Items.username;
+        let SPEC = Items.Specialization;
+        let COURSE = Items.course;
+        let COURSE_TYPE = Items.course_type;
+        let HOBBIES = Items.Hobbies;
+        let COLLEGE_INFO = Items.College_info;
+        let SCHOOL_INFO = Items.School_info;
+        let PROJECTS = Items.projects;
+        let LINKDN  = Items.Linkdn; 
+        let CONTACT = Items.Contact;
+        let USERINFO = Items.UserInfo;
+        let SKILLS = Items.Skills;
+        let AVA_LINK= Items.Avatar_link;
+        let Final_Shot = {
+          FullName: FullName,
+          Email: Email,
+          Spec: SPEC, 
+          Course: COURSE,
+          Course_Type: COURSE_TYPE,
+          College_Info: COLLEGE_INFO,
+          School_Info: SCHOOL_INFO,
+          Linkdn: LINKDN,
+          Contact: CONTACT,
+          UserInfo: USERINFO,
+          Link: AVA_LINK
+        }
+        res.render("student_loggedin", {Final: Final_Shot, Skills: SKILLS, Hobbies: HOBBIES,  Projects: PROJECTS});
+       }
+     });
   }else{ 
   User.findOne({username: TempObj.name} , function(err, Items){
     if(err){
@@ -248,13 +280,29 @@ app.get("/student_loggedin",  function(req, res){
 
 app.get("/recruiter_loggedin", function(req, res){
   if(req.isAuthenticated()){
-  //  console.log(TempObj + " is logged in successfully");
-   res.render("recruiter_loggedin");
+  Recruiter.findOne({username: TempObj.name}, function(err, found){
+    if(err){
+      console.log(err);
+    }else{
+       let Final_one = {
+       Rec_name: found.Recruiter_name,
+       company: found.Company,
+       Rec_email:found.Recruiter_email,
+       Comp_email: found.Company_email,
+       Rec_pos: found.Recruiter_Pos,
+       Rec_Contact: found.Recruiter_Phno,
+       Country: found.Country,
+       City: found.City,
+       Experience: found.Experience,
+       Link: found.Avatar_link  
+      }; 
+    res.render("recruiter_loggedin" , {Final: Final_one});
+    }
+  });
   }else{
     res.redirect("/login");
   }
 });
-
 
 
 app.get("/", function(req, res){
